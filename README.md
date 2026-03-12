@@ -1,2 +1,0 @@
-# Midnightcode
-Front
