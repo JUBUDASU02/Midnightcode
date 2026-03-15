@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.glass {
+  background: rgba(15, 12, 18, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(156, 79, 186, 0.15);
+}
+
+.neon-glow {
+  box-shadow: 0 0 20px rgba(156, 79, 186, 0.4),
+              0 0 40px rgba(156, 79, 186, 0.1);
+}
+
+.text-glow {
+  text-shadow: 0 0 15px rgba(156, 79, 186, 0.9);
+}
+
+.liquid-bg {
+  background: radial-gradient(circle at 50% 50%, #15101a 0%, #050406 100%);
+}
+
+.menu-card {
+  background: linear-gradient(
+    145deg,
+    rgba(20, 16, 25, 0.8) 0%,
+    rgba(5, 4, 6, 1) 100%
+  );
+}
