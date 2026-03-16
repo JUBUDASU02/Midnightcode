@@ -114,7 +114,7 @@ export default function Register() {
                 <div className="space-y-2">
 
                   <label className="text-sm text-slate-300 ml-1">
-                    Full Name
+                    Nombre Completo
                   </label>
 
                   <div className="relative">
