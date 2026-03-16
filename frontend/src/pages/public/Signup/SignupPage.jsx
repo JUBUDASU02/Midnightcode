@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom";
 
 export default function Register() {
   return (
@@ -28,20 +29,21 @@ export default function Register() {
             </span>
 
             <span className="text-3xl font-bold uppercase">
-              Elite Nightlife
+              Vida Nocturna Elite
             </span>
           </div>
 
           {/* title */}
           <h1 className="text-6xl xl:text-8xl font-black leading-none tracking-tight mb-6 uppercase">
-            Join the <br />
+            Únete a la <br />
             <span className="text-primary text-glow">
               Elite
             </span>
           </h1>
 
           <p className="text-xl text-slate-400 font-medium max-w-sm mb-8">
-            Gain exclusive access to the city's most prestigious events and VIP experiences.
+            Obtén acceso exclusivo a los eventos más prestigiosos<br/>
+            y experiencias VIP de la ciudad.
           </p>
 
           {/* avatars */}
@@ -67,17 +69,15 @@ export default function Register() {
             </div>
 
             <span className="text-sm font-medium">
-              Joined by 2,000+ members this week
+              Más de 100 miembros se unieron esta semana
             </span>
 
           </div>
         </div>
-
       </div>
 
       {/* RIGHT SIDE */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 sm:p-12">
-
         <div className="w-full max-w-md">
 
           {/* mobile logo */}
@@ -101,7 +101,7 @@ export default function Register() {
             <div className="relative z-10">
 
               <h2 className="text-3xl font-bold mb-2">
-                Create Membership
+                Unirte 
               </h2>
 
               <p className="text-slate-400 mb-8">
@@ -216,7 +216,12 @@ export default function Register() {
               <div className="mt-8 flex flex-col items-center gap-4">
 
                 <p className="text-sm text-slate-400">
-                  Already a member? Log in here
+                  ¿Ya eres miembro?{" "}
+                  <Link
+                  to="/login"
+                  className="text-primary font-bold hover:underline cursor-pointer">
+                    Inicia sesión aquí
+                  </Link>
                 </p>
 
                 <div className="flex gap-4 w-full">
