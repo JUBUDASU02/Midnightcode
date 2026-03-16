@@ -8,7 +8,11 @@ import ForgotPassword from "./pages/public/ForgotPasswordPage/ForgotPasswordPage
 import ResetPassword from "./pages/public/ResetPasswordPage/ResetPasswordPage"
 
 // Privadas Admin
-import NeonOverloadDashboard from "./pages/Private/Admin/Dashboard/Dashboard"
+import NeonOverloadDashboard from "./pages/Private/Admin/Dashboard"
+
+// Privadas User
+import Dashboard from "./pages/Private/User/Dashboard"
+import Profile from "./pages/Private/User/profile"
 
 
 function App() {
@@ -29,6 +33,10 @@ function App() {
 
       {/* privadas admin */}
       <Route path="/admin" element={<NeonOverloadDashboard/>} />
+
+      {/* privadas user */}
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/profile" element={<Profile />} />
 
     </Routes>
   )

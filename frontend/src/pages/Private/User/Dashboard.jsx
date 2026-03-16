@@ -6,25 +6,70 @@ const events = [
     name: "Techno Overload",
     dj: "DJ Jubu",
     date: "March 22",
-    price: "$40",
+    price: "$100.000",
     image:
       "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
   },
   {
     id: 2,
+    name: "Techno Overload",
+    dj: "DJ Jubu",
+    date: "March 22",
+    price: "$100.000",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  },
+  {
+    id: 3,
+    name: "Techno Overload",
+    dj: "DJ Jubu",
+    date: "March 22",
+    price: "$100.000",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  },
+  {
+    id: 4,
+    name: "Techno Overload",
+    dj: "DJ Jubu",
+    date: "March 22",
+    price: "$100.000",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  },
+  {
+    id: 5,
+    name: "Techno Overload",
+    dj: "DJ Jubu",
+    date: "March 22",
+    price: "$100.000",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  },
+  {
+    id: 6,
+    name: "Techno Overload",
+    dj: "DJ Jubu",
+    date: "March 22",
+    price: "$100.000",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  },
+  {
+    id: 7,
     name: "Neon Night",
     dj: "DJ Jesu",
     date: "March 28",
-    price: "$35",
+    price: "$150.000",
     image:
       "https://images.unsplash.com/photo-1506157786151-b8491531f063",
   },
   {
-    id: 3,
+    id: 8,
     name: "Cyber Rave",
     dj: "DJ Jubu & DJ Jesu",
     date: "April 5",
-    price: "$50",
+    price: "$50.000",
     image:
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
   },
@@ -66,19 +111,19 @@ const UserDashboard = () => {
             Dashboard
           </a>
 
-          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5">
+          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5"  href="#events">
             Events
           </a>
 
-          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5">
+          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5" href="#reservations">
             My Reservations
           </a>
 
-          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5">
+          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5" href="#reviews">
             Reviews
           </a>
 
-          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5">
+          <a className="flex items-center gap-4 p-3 rounded-xl text-gray-500 hover:text-white hover:bg-white/5" href="./profile">
             Profile
           </a>
         </nav>
@@ -144,7 +189,7 @@ const UserDashboard = () => {
 
         {/* EVENTS */}
 
-        <section className="mb-12">
+        <section className="mb-12" id="events">
 
           <h3 className="font-orbitron text-xl text-white mb-6 uppercase">
             Upcoming Events
@@ -196,7 +241,7 @@ const UserDashboard = () => {
 
         {/* MY RESERVATIONS */}
 
-        <section className="mb-12">
+        <section className="mb-12" id ="reservations">
 
           <h3 className="font-orbitron text-xl text-white mb-6 uppercase">
             My Reservations
@@ -235,7 +280,7 @@ const UserDashboard = () => {
 
         {/* REVIEWS */}
 
-        <section className="glass-panel p-6 rounded-3xl border border-white/10">
+        <section className="glass-panel p-6 rounded-3xl border border-white/10" id="reviews">
 
           <h3 className="font-orbitron text-xl text-white mb-4 uppercase">
             Leave a Review
