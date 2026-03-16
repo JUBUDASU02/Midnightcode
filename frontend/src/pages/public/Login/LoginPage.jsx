@@ -103,7 +103,7 @@ export default function Login() {
 
           <div className="mb-10">
 
-            <h3 className="text-3xl font-bold mb-2">
+            <h3 className="text-3xl text-white font-bold mb-2">
               Welcome Back
             </h3>
 
@@ -119,13 +119,13 @@ export default function Login() {
             {/* EMAIL */}
             <div>
 
-              <label className="text-sm mb-2 block">
+              <label className="text-sm text-white mb-2 block">
                 Email Address
               </label>
 
               <div className="relative">
 
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                <span className=" material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                   mail
                 </span>
 
@@ -150,7 +150,7 @@ export default function Login() {
 
               <div className="flex justify-between mb-2">
 
-                <label className="text-sm">
+                <label className=" text-white text-sm">
                   Password
                 </label>
 
