@@ -8,11 +8,11 @@ export default function Experience() {
 
         <div className="mb-16">
           <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-2">
-            The Ritual
+            El Ritual
           </h2>
 
           <h3 className="text-4xl md:text-6xl font-black text-white italic uppercase">
-            The Experience
+            La Experiencia
           </h3>
         </div>
 
@@ -25,11 +25,11 @@ export default function Experience() {
             </div>
 
             <h4 className="text-2xl font-bold text-white mb-4">
-              Liquid Beats
+              Ritmos Líquidos
             </h4>
 
             <p className="text-slate-400">
-              High-fidelity sound systems tuned to vibrate through your soul.
+              Un sistema de sonido de alta fidelidad diseñado para que cada beat recorra tu cuerpo y despierte tus sentidos.
             </p>
 
           </div>
@@ -41,11 +41,11 @@ export default function Experience() {
             </div>
 
             <h4 className="text-2xl font-bold text-white mb-4">
-              Elite Service
+              Servicio Elite
             </h4>
 
             <p className="text-slate-400">
-              Premium bottle service featuring curated spirits.
+              Atención premium y servicio de botellas con una selección exclusiva de licores cuidadosamente curados.
             </p>
 
           </div>
@@ -59,11 +59,11 @@ export default function Experience() {
             </div>
 
             <h4 className="text-2xl font-bold text-white mb-4">
-              Visual Immersion
+              Inmersión Visual
             </h4>
 
             <p className="text-slate-400">
-              360 degree LED mappings and laser choreography.
+              Proyecciones LED en 360° y coreografías de láser que transforman cada momento en un espectáculo sensorial.
             </p>
 
           </div>
