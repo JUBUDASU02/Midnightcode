@@ -48,7 +48,7 @@ export default function Navbar() {
           </button>
           </Link>
 
-          <Link to="/login">
+          <Link to={"/login"}>
           <button className="bg-primary hover:bg-primary/80 text-white px-6 py-2 rounded-full font-bold text-sm transition-all neon-glow uppercase tracking-wider">
           Inicio Sesión
           </button>

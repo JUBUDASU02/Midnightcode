@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const schema = yup.object({
@@ -67,7 +68,7 @@ export default function Login() {
           </div>
 
           <p className="text-slate-400 text-xl max-w-md leading-relaxed">
-            Step into a world where the music never stops and the night is always young.
+            Entra en un mundo donde la música no se detiene y la noche cobra vida.
           </p>
 
         </div>
@@ -77,7 +78,14 @@ export default function Login() {
           <div className="w-12 h-1 bg-white/10 rounded-full"></div>
           <div className="w-12 h-1 bg-white/10 rounded-full"></div>
         </div>
-
+        <Link to={"/"}>
+          <button className="absolute top-10 right-10 flex items-center gap-2 text-slate-400 hover:text-primary transition-colors font-bold uppercase text-xs tracking-widest">
+          <span className="material-symbols-outlined">
+            arrow_back
+          </span>
+            Volver al Inicio
+            </button>
+       </Link>
       </div>
 
 
@@ -108,7 +116,7 @@ export default function Login() {
             </h3>
 
             <p className="text-slate-400">
-              Enter your credentials to access the club portal.
+              Introduce tus datos para acceder al portal exclusivo del club.
             </p>
 
           </div>
@@ -120,7 +128,7 @@ export default function Login() {
             <div>
 
               <label className="text-sm text-white mb-2 block">
-                Email Address
+                Correo Electronico
               </label>
 
               <div className="relative">
@@ -131,7 +139,7 @@ export default function Login() {
 
                 <input
                   type="email"
-                  placeholder="name@luxury.com"
+                  placeholder="name@gmail.com"
                   {...register("email")}
                   className="w-full pl-12 pr-4 py-4 rounded-lg bg-white/5 border border-primary/30 text-white focus:ring-primary outline-none"
                 />
@@ -151,13 +159,14 @@ export default function Login() {
               <div className="flex justify-between mb-2">
 
                 <label className=" text-white text-sm">
-                  Password
+                  Contraseña
                 </label>
 
-                <a className="text-xs text-primary hover:underline">
+                <Link to={"/forgot-password"}>
+                <a className="text-xs text-primary hover:underline cursor-pointer">
                   Forgot password?
                 </a>
-
+                </Link>
               </div>
 
               <div className="relative">
@@ -202,7 +211,7 @@ export default function Login() {
               />
 
               <label className="ml-2 text-sm text-slate-400">
-                Remember my access
+                Recordar sus Credenciales
               </label>
 
             </div>
@@ -213,7 +222,7 @@ export default function Login() {
               type="submit"
               className="w-full py-4 px-6 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold text-lg shadow-lg neon-pulse flex items-center justify-center gap-2"
             >
-              Enter the Night
+              Iniciar la Noche
 
               <span className="material-symbols-outlined">
                 arrow_forward
@@ -232,7 +241,7 @@ export default function Login() {
               <div className="flex-grow border-t border-primary/20"></div>
 
               <span className="mx-4 text-xs text-slate-400 uppercase tracking-widest">
-                Membership Login
+                Iniciar Sesión Con
               </span>
 
               <div className="flex-grow border-t border-primary/20"></div>
@@ -255,13 +264,14 @@ export default function Login() {
 
           </div>
 
-
+          <Link to={"/register"}>
           <p className="mt-10 text-center text-sm text-slate-500">
-            Not a member yet?{" "}
-            <a className="text-primary font-bold hover:underline">
-              Apply for entry
+            ¿Aún no eres miembro?{" "}
+            <a className="text-primary font-bold hover:underline cursor-pointer">
+              Registrarse
             </a>
           </p>
+          </Link>
 
         </div>
 

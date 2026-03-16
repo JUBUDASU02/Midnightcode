@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Link } from "react-router-dom";
 import * as yup from "yup";
 
 const schema = yup.object({
@@ -84,7 +85,8 @@ export default function ForgotPassword() {
               </span>
             </div>
 
-            <a className="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors group">
+            <Link to={"/login"}>
+            <a className="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors group" >
               <span className="text-sm font-medium">
                 Back to Login
               </span>
@@ -93,6 +95,8 @@ export default function ForgotPassword() {
                 arrow_forward
               </span>
             </a>
+            </Link>
+            
 
           </header>
 
