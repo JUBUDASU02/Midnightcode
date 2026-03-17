@@ -12,7 +12,7 @@ import NeonOverloadDashboard from "./pages/Private/Admin/Dashboard"
 
 // Privadas User
 import Dashboard from "./pages/Private/User/Dashboard"
-import Profile from "./pages/Private/User/profile"
+import Profile from "./pages/Private/User/Profile"
 
 
 function App() {
