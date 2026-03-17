@@ -1,46 +1,67 @@
 import { Routes, Route } from "react-router-dom"
-import "../src/assets/css/style.css"
-// Libres
-import HomePage from "./pages/public/Home/Home"
-import Register from "./pages/public/Signup/SignupPage"
-import Login from "./pages/public/Login/LoginPage"
+import "./assets/css/style.css"
+
+// Auth guards
+import PrivateRoute  from "./components/Auth/PrivateRoute"
+import PublicRoute   from "./components/Auth/PublicRoute"
+
+// Public pages
+import HomePage      from "./pages/public/Home/Home"
+import LoginPage     from "./pages/public/Login/LoginPage"
+import RegisterPage  from "./pages/public/Signup/SignupPage"
 import ForgotPassword from "./pages/public/ForgotPasswordPage/ForgotPasswordPage"
-import ResetPassword from "./pages/public/ResetPasswordPage/ResetPasswordPage"
+import ResetPassword  from "./pages/public/ResetPasswordPage/ResetPasswordPage"
 
-// Privadas Admin
-import NeonOverloadDashboard from "./pages/Private/Admin/Dashboard"
+// Private — Admin
+import AdminDashboard from "./pages/Private/Admin/Dashboard"
 
-// Privadas User
-import Dashboard from "./pages/Private/User/Dashboard"
-import Profile from "./pages/Private/User/Profile"
-
+// Private — User
+import UserDashboard from "./pages/Private/User/Dashboard"
 
 function App() {
-
   return (
     <Routes>
 
-      {/* libres */}
+      {/* ── Public ── */}
       <Route path="/" element={<HomePage />} />
 
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={
+        <PublicRoute><LoginPage /></PublicRoute>
+      } />
+      <Route path="/register" element={
+        <PublicRoute><RegisterPage /></PublicRoute>
+      } />
+      <Route path="/forgot-password" element={
+        <PublicRoute><ForgotPassword /></PublicRoute>
+      } />
+      <Route path="/reset-password" element={
+        <PublicRoute><ResetPassword /></PublicRoute>
+      } />
 
-      <Route path="/register" element={<Register/>} />
+      {/* ── Private — Admin ── */}
+      <Route path="/admin" element={
+        <PrivateRoute role="admin"><AdminDashboard /></PrivateRoute>
+      } />
 
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+      {/* ── Private — User (Profile is managed inside Dashboard) ── */}
+      <Route path="/dashboard" element={
+        <PrivateRoute><UserDashboard /></PrivateRoute>
+      } />
+      <Route path="/profile" element={
+        <PrivateRoute><UserDashboard initialPage="profile" /></PrivateRoute>
+      } />
 
-      <Route path="/reset-password" element={<ResetPassword />} />
-
-      {/* privadas admin */}
-      <Route path="/admin" element={<NeonOverloadDashboard/>} />
-
-      {/* privadas user */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/profile" element={<Profile />} />
+      {/* 404 */}
+      <Route path="*" element={
+        <div style={{ minHeight:"100vh", background:"#080810", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:"16px", fontFamily:"'Syne',sans-serif", color:"#fff" }}>
+          <p style={{ fontSize:"80px", margin:0, color:"#c084fc" }}>404</p>
+          <p style={{ color:"#6b6b8a", fontSize:"18px" }}>Página no encontrada</p>
+          <a href="/" style={{ color:"#c084fc", fontSize:"14px" }}>← Volver al inicio</a>
+        </div>
+      } />
 
     </Routes>
   )
-
 }
 
 export default App
