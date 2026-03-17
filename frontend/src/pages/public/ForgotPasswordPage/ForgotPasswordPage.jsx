@@ -50,13 +50,13 @@ export default function ForgotPassword() {
                   auto_awesome
                 </span>
                 <h1 className="text-4xl font-bold tracking-tighter uppercase">
-                  Eclipse
+                  Monaco
                 </h1>
               </div>
 
               <p className="text-slate-300 text-xl max-w-md font-light leading-relaxed">
-                Reconnect with the rhythm. Reset your access to the city's
-                most exclusive beats.
+                Reconéctate con el ritmo.
+                 Restablece tu acceso a los beats más exclusivos de la ciudad.
               </p>
 
             </div>
@@ -88,7 +88,7 @@ export default function ForgotPassword() {
             <Link to={"/login"}>
             <a className="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors group" >
               <span className="text-sm font-medium">
-                Back to Login
+                Regresar al Login
               </span>
 
               <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
@@ -113,11 +113,11 @@ export default function ForgotPassword() {
               </div>
 
               <h2 className="text-4xl font-bold text-slate-100 mb-4 tracking-tight">
-                Forgot password?
+                Olvidaste la Contraseña?
               </h2>
 
               <p className="text-slate-400 text-lg">
-                Enter your email and we'll send you a recovery link.
+                Introduce tu correo electrónico y te enviaremos un enlace de recuperación.
               </p>
 
             </div>
@@ -132,7 +132,7 @@ export default function ForgotPassword() {
               <div className="space-y-2">
 
                 <label className="text-sm font-medium text-slate-300 ml-1">
-                  Email Address
+                  Correo Electronico
                 </label>
 
                 <div className="relative group">
@@ -161,7 +161,7 @@ export default function ForgotPassword() {
                 type="submit"
                 className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg neon-glow transition-all active:scale-[0.98] flex items-center justify-center gap-2"
               >
-                <span>Send Reset Link</span>
+                <span>Enviar Link</span>
 
                 <span className="material-symbols-outlined text-xl">
                   send
@@ -181,8 +181,8 @@ export default function ForgotPassword() {
                 </span>
 
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  If you don't see the email within 5 minutes,
-                  check your spam folder.
+                  Si no ves el correo electrónico en 5 minutos, 
+                  revisa tu carpeta de spam.
                 </p>
 
               </div>

@@ -164,7 +164,7 @@ export default function Login() {
 
                 <Link to={"/forgot-password"}>
                 <a className="text-xs text-primary hover:underline cursor-pointer">
-                  Forgot password?
+                  Olvido la Contraseña?
                 </a>
                 </Link>
               </div>
