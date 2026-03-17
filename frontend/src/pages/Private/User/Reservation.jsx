@@ -5,8 +5,8 @@ const TYPES = [
   {
     id: "asistencia", icon: "◈", label: "Asistencia", color: "#8a2be2",
     opts: [
-      { id: "gen", label: "General", price: 80000, perks: ["Acceso piso principal", "Barra libre 2hrs"] },
-      { id: "prem", label: "Premium", price: 120000, perks: ["Acceso preferencial", "Barra libre 3hrs", "Meet & Greet"] },
+      { id: "gen", label: "General", price: 80000, perks: ["Acceso zona principal", "Cerveza incluida"] },
+      { id: "prem", label: "Premium", price: 120000, perks: ["Acceso preferencial", "Botella incluida", "Meet & Greet"] },
     ],
   },
   {
@@ -20,16 +20,16 @@ const TYPES = [
   {
     id: "vip", icon: "◆", label: "Zona VIP", color: "#ff6b35",
     opts: [
-      { id: "v1", label: "VIP Individual", price: 250000, perks: ["Acceso zona VIP", "Silla reservada", "Mesero", "2 bebidas premium"] },
-      { id: "vg", label: "VIP Grupo ×5", price: 900000, perks: ["Mesa VIP", "5 entradas", "Espumante", "Servicio dedicado"] },
+      { id: "v1", label: "VIP Individual", price: 250000, perks: ["Acceso zona VIP", "Silla reservada", "Mesero", "2 bebidas premium", "Meet & Greet"] },
+      { id: "vg", label: "VIP Grupo ×5", price: 900000, perks: ["Mesa VIP", "5 entradas", "Botella Don julio 70años", "Servicio dedicado"] },
     ],
   },
   {
     id: "parqueadero", icon: "⬢", label: "Parqueadero", color: "#00c87a",
     opts: [
-      { id: "moto", label: "Moto", price: 15000, perks: ["Techado", "Vigilancia nocturna"] },
-      { id: "carro", label: "Carro", price: 25000, perks: ["Cubierto", "Vigilancia 24h", "Salida prioritaria"] },
-      { id: "vprem", label: "Carro Premium", price: 45000, perks: ["Zona VIP parking", "Vigilante asignado", "Servicio llaves"] },
+      { id: "moto", label: "Moto", price: 15000, perks: ["Zona cubierta", "Vigilancia 24h", "Tarifa plena"] },
+      { id: "carro", label: "Carro", price: 25000, perks: ["Zona Cubierta", "Vigilancia 24h", "Salida prioritaria", "Tarifa plena"] },
+      { id: "vprem", label: "Carro Premium", price: 45000, perks: ["Zona VIP parking", "Vigilancia 24h", "Valet parking", "Tarifa plena"] },
     ],
   },
 ];
