@@ -8,9 +8,6 @@ import { useNavigate } from "react-router-dom"
 /* ─────────────────────────────────────────────
    DATOS
 ───────────────────────────────────────────── */
-const { user, logout } = useAuth()
-const navigate = useNavigate()
-const handleLogout = () => { logout(); navigate("/login", { replace: true }); }
 
 const events = [
   { id: 1, name: "Techno Overload", dj: "DJ Jubu",         date: "March 22",  price: "$100.000", tag: "SOLD OUT", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80" },
@@ -147,10 +144,29 @@ function ProfileDropdown({ user, onProfile, onLogout, onClose }) {
    DASHBOARD PRINCIPAL
 ───────────────────────────────────────────── */
 export default function UserDashboard() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [activePage,    setActivePage]    = useState("dashboard");
   const [activeNav,     setActiveNav]     = useState("dashboard");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [dropOpen,      setDropOpen]      = useState(false);   // ← controla el dropdown
+
+  const handleAuthLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
+  const openLogoutScreen = () => {
+    setDropOpen(false);
+    setActivePage("logout");
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  const CURRENT_USER = user;
 
   /* Navegación lateral */
   const handleNavClick = (id) => {
@@ -177,12 +193,6 @@ export default function UserDashboard() {
     setActivePage("profile");
     setActiveNav("");
     setDropOpen(false);
-  };
-
-  /* Cerrar sesión */
-  const handleLogout = () => {
-    setDropOpen(false);
-    setActivePage("logout");
   };
 
   /* ── Renders de páginas secundarias ── */
@@ -342,7 +352,7 @@ export default function UserDashboard() {
                 <ProfileDropdown
                   user={CURRENT_USER}
                   onProfile={handleGoToProfile}
-                  onLogout={handleLogout}
+                  onLogout={handleAuthLogout}
                   onClose={() => setDropOpen(false)}
                 />
               )}

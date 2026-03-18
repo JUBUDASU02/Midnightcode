@@ -30,7 +30,7 @@ const MOCK_USERS = [
   id: 3,
   name: "DJ Jubu",
   email: "dj@neon.com",
-  password: "dj123",
+  password: "dj1234",
   role: "dj",
   avatar: "https://i.pravatar.cc/200?img=15",
   memberSince: "Marzo 2025",
