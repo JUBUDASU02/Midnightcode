@@ -2,6 +2,7 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
+import { SongProvider } from "./context/SongContext"
 import App from "./App.jsx"
 import "./assets/css/style.css"
 
@@ -11,7 +12,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <SongProvider>
+          <App />
+        </SongProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>

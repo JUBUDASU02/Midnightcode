@@ -18,6 +18,9 @@ import AdminDashboard from "./pages/Private/Admin/Dashboard"
 // Private — User
 import UserDashboard from "./pages/Private/User/Dashboard"
 
+//Private-DJ
+import DJPanel from "./pages/Private/DJ/DJPanel"
+
 function App() {
   return (
     <Routes>
@@ -49,6 +52,11 @@ function App() {
       } />
       <Route path="/profile" element={
         <PrivateRoute><UserDashboard initialPage="profile" /></PrivateRoute>
+      } />
+
+      {/* ── Private — DJ Panel ── */}
+      <Route path="/dj" element={
+        <PrivateRoute role="dj"><DJPanel /></PrivateRoute>
       } />
 
       {/* 404 */}
