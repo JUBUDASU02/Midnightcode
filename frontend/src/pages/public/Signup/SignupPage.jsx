@@ -1,6 +1,43 @@
-import React from "react"
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
+const schema = yup.object({
+  name: yup.string().min(2).required("Nombre requerido"),
+  email: yup.string().email().required("Correo requerido"),
+  password: yup.string().min(6).required("Contraseña requerida"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "No coinciden")
+    .required("Confirma tu contraseña"),
+  terms: yup.boolean().oneOf([true], "Debes aceptar"),
+});
 
 export default function Register() {
+  const { register: authRegister, authError, clearError } = useAuth();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onSubmit = (data) => {
+    clearError();
+    const result = authRegister({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
+
+    if (result.success) {
+      navigate("/dashboard", { replace: true });
+    }
+  };
+
   return (
     <div className="relative flex min-h-screen w-full overflow-hidden bg-background-dark text-slate-100 font-display">
 
@@ -108,7 +145,7 @@ export default function Register() {
                 Please enter your details to request your digital pass.
               </p>
 
-              <form className="space-y-5">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
                 {/* name */}
                 <div className="space-y-2">
@@ -126,10 +163,15 @@ export default function Register() {
                     <input
                       type="text"
                       placeholder="John Doe"
+                      {...register("name")}
                       className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 focus:ring-2 focus:ring-primary/40"
                     />
 
                   </div>
+
+                  <p className="text-red-400 text-xs">
+                    {errors.name?.message}
+                  </p>
 
                 </div>
 
@@ -149,10 +191,15 @@ export default function Register() {
                     <input
                       type="email"
                       placeholder="name@example.com"
+                      {...register("email")}
                       className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 focus:ring-2 focus:ring-primary/40"
                     />
 
                   </div>
+
+                  <p className="text-red-400 text-xs">
+                    {errors.email?.message}
+                  </p>
 
                 </div>
 
@@ -168,8 +215,13 @@ export default function Register() {
                     <input
                       type="password"
                       placeholder="••••••"
+                      {...register("password")}
                       className="w-full px-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100"
                     />
+
+                    <p className="text-red-400 text-xs">
+                      {errors.password?.message}
+                    </p>
 
                   </div>
 
@@ -182,19 +234,25 @@ export default function Register() {
                     <input
                       type="password"
                       placeholder="••••••"
+                      {...register("confirmPassword")}
                       className="w-full px-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100"
                     />
+
+                    <p className="text-red-400 text-xs">
+                      {errors.confirmPassword?.message}
+                    </p>
 
                   </div>
 
                 </div>
 
                 {/* checkbox */}
-                <div className="flex items-center gap-2 pt-2">
+                <div className="flex items-start gap-2 pt-2">
 
                   <input
                     type="checkbox"
-                    className="size-4 rounded border-primary/30 bg-primary/10 text-primary"
+                    {...register("terms")}
+                    className="size-4 mt-1 rounded border-primary/30 bg-primary/10 text-primary"
                   />
 
                   <label className="text-xs text-slate-400">
@@ -203,8 +261,19 @@ export default function Register() {
 
                 </div>
 
+                <p className="text-red-400 text-xs">
+                  {errors.terms?.message}
+                </p>
+
+                {authError ? (
+                  <p className="text-red-400 text-center text-sm">
+                    {authError}
+                  </p>
+                ) : null}
+
                 {/* submit */}
                 <button
+                  type="submit"
                   className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl neon-glow flex items-center justify-center gap-2"
                 >
                   Get My Pass
@@ -254,5 +323,5 @@ export default function Register() {
       </div>
 
     </div>
-  )
+  );
 }

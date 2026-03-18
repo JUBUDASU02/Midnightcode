@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../../../context/AuthContext"
 
 const EVENTS_HISTORY = [
   { id: 1, name: "Techno Overload", date: "Mar 22, 2026", rating: 5, type: "VIP Table" },
@@ -33,7 +34,12 @@ export default function ProfilePage({ user, onBack }) {
   const [showPw, setShowPw]   = useState(false);
   const [saved, setSaved]     = useState(false);
 
-  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2500); };
+ const { updateUser } = useAuth()
+const save = () => {
+  updateUser(form)
+  setSaved(true)
+  setTimeout(() => setSaved(false), 2500)
+}
 
   const TABS = [
     { id: "account",  label: "Cuenta"    },

@@ -10,7 +10,14 @@ export default function PublicRoute({ children }) {
   const { user } = useAuth();
 
   if (user) {
-    return <Navigate to={user.role === "admin" ? "/admin" : "/dashboard"} replace />;
+    const redirect =
+      user.role === "admin"
+        ? "/admin"
+        : user.role === "dj"
+        ? "/dj"
+        : "/dashboard";
+
+    return <Navigate to={redirect} replace />;
   }
 
   return children;

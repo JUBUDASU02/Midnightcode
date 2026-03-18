@@ -2,18 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import ReservationPage from "./Reservation";
 import SongRequestPage from "./Songrequest";
 import ProfilePage from "./Profile";
+import { useAuth } from "../../../context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 /* ─────────────────────────────────────────────
    DATOS
 ───────────────────────────────────────────── */
-const CURRENT_USER = {
-  name: "Alex Rivera",
-  email: "alex@email.com",
-  phone: "+57 300 000 0000",
-  city: "Bogotá",
-  role: "VIP Member",
-  avatar: "https://i.pravatar.cc/200?img=3",
-};
+const { user, logout } = useAuth()
+const navigate = useNavigate()
+const handleLogout = () => { logout(); navigate("/login", { replace: true }); }
 
 const events = [
   { id: 1, name: "Techno Overload", dj: "DJ Jubu",         date: "March 22",  price: "$100.000", tag: "SOLD OUT", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80" },

@@ -26,6 +26,15 @@ const MOCK_USERS = [
     avatar: "https://i.pravatar.cc/200?img=10",
     memberSince: "Enero 2024",
   },
+{
+  id: 3,
+  name: "DJ Jubu",
+  email: "dj@neon.com",
+  password: "dj123",
+  role: "dj",
+  avatar: "https://i.pravatar.cc/200?img=15",
+  memberSince: "Marzo 2025",
+},
 ];
 
 export function AuthProvider({ children }) {

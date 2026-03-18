@@ -1,6 +1,16 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const NeonOverloadDashboard = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   useEffect(() => {
     // Script de consola original (puedes eliminarlo si no lo necesitas)
     console.log("NEON OVERLOAD Dashboard initialized. System state: CHIMBA.");
@@ -73,17 +83,26 @@ const NeonOverloadDashboard = () => {
           <div className="flex items-center gap-3">
             <div className="relative w-10 h-10">
               <img
-                alt="Admin"
+                alt={user?.name ?? "Admin"}
                 className="rounded-full border border-neon-magenta"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNZUx-hVVGfw7EXKtHbQOzed0SRmNFHme_FpE_jN5i8FmGrkqi1CpJk4C63H6gyGaws_KmOnwzBCnpVkwJ0n5oD1D2uL1haDaNoMnPU0vHqGx-lxo3k2na3ZS0FkekZXMQgPkRzM6fAk15oJhPxM9hLH7qEfQVUXI4GUXTC5sTzFnmpoIfZPgE8AGkcOHM3s_MhYp7w4X3Rbv5hxMpPVWjm65gSqjaryvgcuD1ex3HciQ4e7lMfOtcSnGMiEl_EmymGkBo1diXFnNs"
+                src={user?.avatar ?? "https://i.pravatar.cc/100?img=10"}
               />
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
             </div>
             <div className="hidden lg:block">
-              <p className="text-sm font-bold text-white">System Admin</p>
-              <p className="text-xs text-neon-magenta uppercase tracking-widest">Level 10</p>
+              <p className="text-sm font-bold text-white">{user?.name ?? "Admin"}</p>
+              <p className="text-xs text-neon-magenta uppercase tracking-widest">
+                {user?.role ? user.role.toUpperCase() : "ADMIN"}
+              </p>
             </div>
           </div>
+
+          <button
+            onClick={handleLogout}
+            className="mt-5 w-full py-2 px-4 bg-neon-purple/10 text-neon-purple border border-neon-purple rounded-lg hover:bg-neon-purple/20 transition"
+          >
+            Logout
+          </button>
         </div>
       </aside>
 

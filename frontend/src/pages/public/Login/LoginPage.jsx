@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const schema = yup.object({
   email: yup
@@ -27,8 +29,23 @@ export default function Login() {
     resolver: yupResolver(schema)
   });
 
+  const { login, authError, clearError } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const onSubmit = (data) => {
-    console.log(data);
+    clearError();
+    const result = login({ email: data.email, password: data.password });
+    if (result.success) {
+      const from = location.state?.from?.pathname;
+      const dest =
+        result.role === "admin"
+          ? "/admin"
+          : result.role === "dj"
+          ? "/dj"
+          : "/dashboard";
+      navigate(from || dest, { replace: true });
+    }
   };
 
   return (
@@ -220,6 +237,12 @@ export default function Login() {
               </span>
 
             </button>
+
+            {authError ? (
+              <p className="mt-4 text-center text-red-400 text-sm">
+                {authError}
+              </p>
+            ) : null}
 
           </form>
 
