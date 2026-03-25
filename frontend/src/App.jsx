@@ -5,6 +5,7 @@ import "./assets/css/style.css"
 import PrivateRoute  from "./components/Auth/PrivateRoute"
 import PublicRoute   from "./components/Auth/PublicRoute"
 
+//Hola el profe si se baño :D
 // Public pages
 import HomePage      from "./pages/public/Home/Home"
 import LoginPage     from "./pages/public/Login/LoginPage"
