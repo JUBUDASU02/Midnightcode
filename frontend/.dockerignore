@@ -1,0 +1,44 @@
+# .dockerignore
+# Archivos que Docker NO debe copiar al contenedor
+# Esto hace el build más rápido y la imagen más pequeña
+
+# Dependencias (se instalan dentro del contenedor con npm ci)
+node_modules/
+.npm/
+
+# Build anterior (se genera dentro del contenedor)
+dist/
+build/
+
+# Variables de entorno con secretos (nunca van al contenedor)
+.env
+.env.local
+.env.development
+.env.production
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+*.test.*
+*.spec.*
+
+# Documentación (no es necesaria en producción)
+README.md
+*.md
