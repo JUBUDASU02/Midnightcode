@@ -1,14 +1,5 @@
 /**
  * src/context/AuthContext.jsx
- *
- * Context de autenticación conectado al backend Express + JWT.
- * Ya no usa MOCK_USERS — todas las operaciones van al servidor.
- *
- * Flujo:
- *  1. Al montar, hidrata el usuario desde localStorage (sesión persistente)
- *  2. login()    → POST /auth/login    → guarda token + user en localStorage
- *  3. register() → POST /auth/register → guarda token + user en localStorage
- *  4. logout()   → POST /auth/logout   → limpia localStorage
  */
 
 import { createContext, useContext, useState, useCallback } from "react";
@@ -21,7 +12,6 @@ import {
 
 const AuthContext = createContext(null);
 
-// ─── Redirección por rol ──────────────────────────────────────────────────────
 export const roleRedirect = (role) => {
   switch (role) {
     case "admin":    return "/admin";
@@ -31,15 +21,11 @@ export const roleRedirect = (role) => {
   }
 };
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
 export function AuthProvider({ children }) {
-
-  // Hidrata el usuario desde localStorage (sesión persistente entre recargas)
   const [user,      setUser]      = useState(() => getStoredUser());
   const [authError, setAuthError] = useState(null);
   const [loading,   setLoading]   = useState(false);
 
-  // ── Login ──────────────────────────────────────────────────────────────────
   const login = useCallback(async ({ email, password }) => {
     setAuthError(null);
     setLoading(true);
@@ -56,12 +42,11 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ── Register ───────────────────────────────────────────────────────────────
-  const register = useCallback(async ({ name, email, password }) => {
+  const register = useCallback(async ({ docId, name, email, phone, password }) => {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser } = await registerRequest({ name, email, password });
+      const { user: apiUser } = await registerRequest({ docId, name, email, phone, password });
       setUser(apiUser);
       return { success: true, role: apiUser.role };
     } catch (err) {
@@ -73,7 +58,6 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ── Logout ─────────────────────────────────────────────────────────────────
   const logout = useCallback(async () => {
     setLoading(true);
     try {
@@ -84,8 +68,6 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ── Update user (local — para cambios de perfil) ───────────────────────────
-  // Cuando tengas PATCH /users/me en el backend, reemplaza esto por una llamada real
   const updateUser = useCallback((updates) => {
     setUser((prev) => {
       if (!prev) return prev;
@@ -99,16 +81,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        authError,
-        loading,
-        login,
-        register,
-        logout,
-        updateUser,
-        clearError,
-      }}
+      value={{ user, authError, loading, login, register, logout, updateUser, clearError }}
     >
       {children}
     </AuthContext.Provider>

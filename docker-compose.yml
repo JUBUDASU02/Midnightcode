@@ -1,92 +1,41 @@
 # docker-compose.yml
-# Orquesta el frontend (React + Nginx) junto al backend (Express)
-#
-# Los comandos para INICIAR todo son:
-#   Iniciar todo:          docker compose up -d
-#   Solo el frontend:      docker compose up frontend -d
-#   Ver logs:              docker compose logs -f frontend
-#   Parar todo:            docker compose down
-#   Rebuild frontend:      docker compose up frontend --build -d
-#   Limpiar todo:          docker compose down -v --rmi all
-# la vida es horrible 
 version: "3.9"
 
 services:
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # FRONTEND — React compilado con Vite, servido por Nginx
-  # ─────────────────────────────────────────────────────────────────────────
   frontend:
     container_name: neon_frontend
     build:
-      context: ./frontend          # Carpeta donde está el Dockerfile
+      context: ./frontend
       dockerfile: Dockerfile
       args:
-        # URL del backend que el frontend usa en tiempo de BUILD
-        # Para producción cambia esto a tu dominio real
-        VITE_API_URL: http://localhost:3000/api
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
     ports:
-      - "80:80"                    # La app queda disponible en http://localhost
+      - "80:80"
     depends_on:
-      - backend                    # Espera a que el backend esté listo
+      - backend
     networks:
       - neon_network
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # BACKEND — Node.js + Express
-  # Ajusta el context y el puerto según tu proyecto backend
-  # ─────────────────────────────────────────────────────────────────────────
   backend:
     container_name: neon_backend
-    # Opción A: tienes un Dockerfile en la carpeta backend/
     build:
-      context: ./backend           # ← Ajusta esta ruta a tu carpeta backend
+      context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"                # Puerto del servidor Express
+      - "3000:3000"
     networks:
       - neon_network
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=3000
-      # Agrega aquí las variables de entorno que necesite tu backend:
-      # - DB_HOST=db
-      # - DB_PORT=5432
-      # - DB_NAME=neonoverload
-      # - DB_USER=postgres
-      # - DB_PASS=secreto
-      # - JWT_SECRET=tu_jwt_secret_super_seguro
-    # Si tu backend necesita una base de datos, descomenta:
-    # depends_on:
-    #   - db
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # (OPCIONAL) BASE DE DATOS — descomenta si el backend la necesita
-  # ─────────────────────────────────────────────────────────────────────────
-  # db:
-  #   container_name: neon_db
-  #   image: postgres:16-alpine
-  #   environment:
-  #     POSTGRES_DB: neonoverload
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: secreto
-  #   volumes:
-  #     - db_data:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - neon_network
-  #   restart: unless-stopped
-
-# ─── Red compartida entre todos los servicios ──────────────────────────────
 networks:
   neon_network:
     driver: bridge
-
-# ─── Volúmenes persistentes (descomenta si usas DB) ───────────────────────
-# volumes:
-#   db_data:
