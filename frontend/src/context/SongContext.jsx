@@ -1,15 +1,21 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { io } from "socket.io-client";
+import {
+  fetchQueue,
+  requestSong as requestSongApi,
+  voteSongRequest,
+  playSongRequest,
+  markPlayedRequest,
+  rejectSongRequest,
+  restoreSongRequest,
+} from "../services/songService";
 
 const SongContext = createContext(null);
 
-const INITIAL_QUEUE = [
-  { id:1, title:"Lose Yourself to Dance", artist:"Daft Punk",  votes:24, status:"playing", requestedBy:"Anon",      genre:"House",   message:"",                          timestamp: Date.now() - 600000 },
-  { id:2, title:"Strobe",                 artist:"deadmau5",   votes:18, status:"queued",  requestedBy:"Juan P.",   genre:"Electro", message:"Subela bien duro!",          timestamp: Date.now() - 480000 },
-  { id:3, title:"Levels",                 artist:"Avicii",     votes:15, status:"queued",  requestedBy:"Anon",      genre:"House",   message:"",                          timestamp: Date.now() - 360000 },
-  { id:4, title:"Sandstorm",              artist:"Darude",     votes:11, status:"queued",  requestedBy:"Carlos M.", genre:"Techno",  message:"Es mi canción favorita!",    timestamp: Date.now() - 240000 },
-  { id:5, title:"One More Time",          artist:"Daft Punk",  votes:9,  status:"queued",  requestedBy:"Anon",      genre:"Nu-Disco",message:"",                          timestamp: Date.now() - 120000 },
-  { id:6, title:"Mr. Brightside",         artist:"The Killers",votes:6,  status:"queued",  requestedBy:"Sara V.",   genre:"Electro", message:"Para mi amiga que cumple hoy",timestamp: Date.now() - 60000  },
-];
+// For Docker: VITE_API_URL is "/api" (relative), so socket connects to same origin
+// For local dev: VITE_API_URL is "http://localhost:3000/api"
+const VITE_API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const BACKEND_URL = VITE_API_URL.startsWith("/") ? undefined : VITE_API_URL.replace("/api", "");
 
 const sort = (q) => [...q].sort((a, b) => {
   if (a.status === "playing") return -1;
@@ -20,65 +26,67 @@ const sort = (q) => [...q].sort((a, b) => {
 });
 
 export function SongProvider({ children }) {
-  const [queue,   setQueue]   = useState(sort(INITIAL_QUEUE));
-  const [votedIds,setVotedIds]= useState([]);
+  const [queue,    setQueue]    = useState([]);
+  const [votedIds, setVotedIds] = useState([]);
+  const [loading,  setLoading]  = useState(true);
 
-  // Usuario: agregar canción a la cola
-  const addSong = useCallback(({ title, artist, genre, message, requestedBy }) => {
-    const newSong = {
-      id:          Date.now(),
-      title:       title.trim(),
-      artist:      artist.trim() || "Artista desconocido",
-      votes:       1,
-      status:      "queued",
-      requestedBy,
-      genre:       genre || "",
-      message:     message || "",
-      timestamp:   Date.now(),
-    };
-    setQueue(prev => sort([...prev, newSong]));
-    return newSong.id;
+  // Load initial queue
+  useEffect(() => {
+    fetchQueue()
+      .then(data => setQueue(sort(Array.isArray(data) ? data : [])))
+      .catch(() => setQueue([]))
+      .finally(() => setLoading(false));
   }, []);
 
-  // Usuario: votar por una canción
-  const voteSong = useCallback((id) => {
+  // Socket.IO real-time updates
+  useEffect(() => {
+    const socket = BACKEND_URL
+      ? io(BACKEND_URL, { transports: ["websocket", "polling"] })
+      : io({ transports: ["websocket", "polling"] });
+    socket.on("colaCanciones", (lista) => {
+      setQueue(sort(Array.isArray(lista) ? lista : []));
+    });
+    return () => socket.disconnect();
+  }, []);
+
+  const addSong = useCallback(async ({ title, artist, genre, message }) => {
+    const song = await requestSongApi({ title, artist, genre, message });
+    return song?.id;
+  }, []);
+
+  const voteSong = useCallback(async (id) => {
     if (votedIds.includes(id)) return false;
     setVotedIds(prev => [...prev, id]);
-    setQueue(prev => sort(prev.map(s => s.id === id ? { ...s, votes: s.votes + 1 } : s)));
+    await voteSongRequest(id).catch(() => {
+      setVotedIds(prev => prev.filter(x => x !== id));
+    });
     return true;
   }, [votedIds]);
 
-  // DJ: marcar como "sonando ahora"
-  const playSong = useCallback((id) => {
-    setQueue(prev => sort(prev.map(s => ({
-      ...s,
-      status: s.id === id ? "playing" : s.status === "playing" ? "played" : s.status,
-    }))));
+  const playSong = useCallback(async (id) => {
+    await playSongRequest(id);
   }, []);
 
-  // DJ: marcar como "ya se tocó"
-  const markPlayed = useCallback((id) => {
-    setQueue(prev => sort(prev.map(s => s.id === id ? { ...s, status: "played" } : s)));
+  const markPlayed = useCallback(async (id) => {
+    await markPlayedRequest(id);
   }, []);
 
-  // DJ: rechazar / eliminar de la cola
-  const rejectSong = useCallback((id) => {
-    setQueue(prev => sort(prev.map(s => s.id === id ? { ...s, status: "rejected" } : s)));
+  const rejectSong = useCallback(async (id) => {
+    await rejectSongRequest(id);
   }, []);
 
-  // DJ: restaurar una canción rechazada de vuelta a la cola
-  const restoreSong = useCallback((id) => {
-    setQueue(prev => sort(prev.map(s => s.id === id ? { ...s, status: "queued" } : s)));
+  const restoreSong = useCallback(async (id) => {
+    await restoreSongRequest(id);
   }, []);
 
-  const queued  = queue.filter(s => s.status === "queued");
-  const playing = queue.find(s  => s.status === "playing") || null;
-  const played  = queue.filter(s => s.status === "played");
-  const rejected= queue.filter(s => s.status === "rejected");
+  const queued   = queue.filter(s => s.status === "queued");
+  const playing  = queue.find(s  => s.status === "playing") || null;
+  const played   = queue.filter(s => s.status === "played");
+  const rejected = queue.filter(s => s.status === "rejected");
 
   return (
     <SongContext.Provider value={{
-      queue, votedIds,
+      queue, votedIds, loading,
       queued, playing, played, rejected,
       addSong, voteSong, playSong, markPlayed, rejectSong, restoreSong,
     }}>

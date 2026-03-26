@@ -78,8 +78,8 @@ export const loginRequest = async ({ email, password }) => {
  *
  * El backend normalmente devuelve el mismo formato que login.
  */
-export const registerRequest = async ({ name, email, password }) => {
-  const { data } = await api.post("/auth/register", { name, email, password });
+export const registerRequest = async ({ docId, name, email, phone, password }) => {
+  const { data } = await api.post("/auth/register", { docId, name, email, phone, password });
 
   const token = data.token || data.access_token || data.data?.token;
   const user  = data.user  || data.data?.user;

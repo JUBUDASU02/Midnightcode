@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -6,11 +5,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
-// ✅ BUG-04 FIX: SignupPage conectado con react-hook-form + yup + useAuth
-
 const schema = yup.object({
+  docId:           yup.string().matches(/^\d{6,15}$/, "Cédula inválida").required("La cédula es requerida"),
   name:            yup.string().min(2, "Mínimo 2 caracteres").required("El nombre es requerido"),
   email:           yup.string().email("Correo inválido").required("El correo es requerido"),
+  phone:           yup.string().matches(/^\d{7,15}$/, "Teléfono inválido").required("El teléfono es requerido"),
   password:        yup.string().min(6, "Mínimo 6 caracteres").required("La contraseña es requerida"),
   confirmPassword: yup.string()
     .oneOf([yup.ref("password")], "Las contraseñas no coinciden")
@@ -30,8 +29,10 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     clearError();
     const result = await authRegister({
+      docId:    data.docId,
       name:     data.name,
       email:    data.email,
+      phone:    data.phone,
       password: data.password,
     });
     if (result.success) {
@@ -94,6 +95,21 @@ export default function RegisterPage() {
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
+                {/* Cédula */}
+                <div className="space-y-2">
+                  <label className="text-sm text-slate-300 ml-1">Cédula de identidad</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">badge</span>
+                    <input
+                      type="text"
+                      placeholder="12345678"
+                      {...register("docId")}
+                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none"
+                    />
+                  </div>
+                  {errors.docId && <p className="text-red-400 text-xs">{errors.docId.message}</p>}
+                </div>
+
                 {/* Nombre */}
                 <div className="space-y-2">
                   <label className="text-sm text-slate-300 ml-1">Nombre completo</label>
@@ -122,6 +138,21 @@ export default function RegisterPage() {
                     />
                   </div>
                   {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
+                </div>
+
+                {/* Teléfono */}
+                <div className="space-y-2">
+                  <label className="text-sm text-slate-300 ml-1">Teléfono</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">phone</span>
+                    <input
+                      type="tel"
+                      placeholder="3001234567"
+                      {...register("phone")}
+                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none"
+                    />
+                  </div>
+                  {errors.phone && <p className="text-red-400 text-xs">{errors.phone.message}</p>}
                 </div>
 
                 {/* Passwords */}
@@ -197,79 +228,4 @@ export default function RegisterPage() {
       </div>
     </div>
   );
-=======
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import AuthFooter from "../../../components/Layout/AuthFooter"
-
-const schema = yup.object({
-
-name: yup
-.string()
-.required("Name required"),
-
-email: yup
-.string()
-.email("Invalid email")
-.required("Email required"),
-
-password: yup
-.string()
-.min(6,"Minimum 6 characters")
-.required(),
-
-confirmPassword: yup
-.string()
-.oneOf([yup.ref("password")],"Passwords must match")
-
-})
-
-export default function SignupPage(){
-
-const {
-register,
-handleSubmit,
-formState:{errors}
-} = useForm({
-resolver:yupResolver(schema)
-})
-
-const onSubmit=(data)=>{
-console.log("SIGNUP DATA",data)
-}
-
-return(
-
-<div className="flex flex-col lg:flex-row min-h-screen">
-
-<form onSubmit={handleSubmit(onSubmit)}>
-
-<input {...register("name")} placeholder="Name"/>
-
-{errors.name && <p>{errors.name.message}</p>}
-
-<input {...register("email")} placeholder="Email"/>
-
-{errors.email && <p>{errors.email.message}</p>}
-
-<input type="password" {...register("password")} placeholder="Password"/>
-
-{errors.password && <p>{errors.password.message}</p>}
-
-<input type="password" {...register("confirmPassword")} placeholder="Confirm Password"/>
-
-{errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
-
-<button type="submit">Create account</button>
-
-</form>
-
-<AuthFooter/>
-
-</div>
-
-)
-
->>>>>>> b4ef4ea (featu:Home)
 }

@@ -57,11 +57,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   // ── Register ───────────────────────────────────────────────────────────────
-  const register = useCallback(async ({ name, email, password }) => {
+  const register = useCallback(async ({ docId, name, email, phone, password }) => {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser } = await registerRequest({ name, email, password });
+      const { user: apiUser } = await registerRequest({ docId, name, email, phone, password });
       setUser(apiUser);
       return { success: true, role: apiUser.role };
     } catch (err) {
