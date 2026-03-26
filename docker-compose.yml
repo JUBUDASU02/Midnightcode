@@ -8,7 +8,7 @@
 #   Parar todo:            docker compose down
 #   Rebuild frontend:      docker compose up frontend --build -d
 #   Limpiar todo:          docker compose down -v --rmi all
-
+# la vida es horrible 
 version: "3.9"
 
 services:
