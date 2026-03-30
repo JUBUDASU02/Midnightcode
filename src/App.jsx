@@ -1,32 +1,37 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
+import { Suspense, lazy } from "react"
 import "./assets/css/style.css"
 
 // Auth guards
 import PrivateRoute  from "./components/Auth/PrivateRoute"
 import PublicRoute   from "./components/Auth/PublicRoute"
 
-//Hola el profe si se baño :D
 // Public pages
-import HomePage      from "./pages/public/Home/Home"
-import LoginPage     from "./pages/public/Login/LoginPage"
-import RegisterPage  from "./pages/public/Signup/SignupPage"
-import ForgotPassword from "./pages/public/ForgotPasswordPage/ForgotPasswordPage"
-import ResetPassword  from "./pages/public/ResetPasswordPage/ResetPasswordPage"
+const HomePage      = lazy(() => import("./pages/public/Home/Home"))
+const LoginPage     = lazy(() => import("./pages/public/Login/LoginPage"))
+const RegisterPage  = lazy(() => import("./pages/public/Signup/SignupPage"))
+const ForgotPassword = lazy(() => import("./pages/public/ForgotPasswordPage/ForgotPasswordPage"))
+const ResetPassword  = lazy(() => import("./pages/public/ResetPasswordPage/ResetPasswordPage"))
 
 // Private — Admin
-import AdminDashboard from "./pages/Private/Admin/Dashboard"
+const AdminDashboard = lazy(() => import("./pages/Private/Admin/Dashboard"))
 
 // Private — User
-import UserDashboard from "./pages/Private/User/Dashboard"
+const UserDashboard = lazy(() => import("./pages/Private/User/Dashboard"))
 
-//Private-DJ
-import DJPanel from "./pages/Private/DJ/DJPanel"
+// Private — DJ
+const DJPanel = lazy(() => import("./pages/Private/DJ/DJPanel"))
 
 // Private — Employee
-import EmployeeDashboard from "./pages/Private/Employee/EmployeeDashboard"
+const EmployeeDashboard = lazy(() => import("./pages/Private/Employee/EmployeeDashboard"))
 
 function App() {
   return (
+    <Suspense fallback={
+      <div style={{ minHeight: "100vh", background: "#080810", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: "40px", height: "40px", border: "3px solid #c084fc", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+      </div>
+    }>
     <Routes>
 
       {/* ── Public ── */}
@@ -78,6 +83,7 @@ function App() {
       } />
 
     </Routes>
+    </Suspense>
   )
 
 }
