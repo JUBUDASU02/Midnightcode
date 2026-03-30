@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50 glass border-b border-primary/10">
@@ -32,9 +34,12 @@ export default function Navbar() {
             Location
           </a>
 
-          <button className="bg-primary hover:bg-primary/80 text-white px-6 py-2 rounded-full font-bold text-sm transition-all neon-glow uppercase tracking-wider">
-            Book Table
-          </button>
+          <Link
+            to="/login"
+            className="bg-primary hover:bg-primary/80 text-white px-6 py-2 rounded-full font-bold text-sm transition-all neon-glow uppercase tracking-wider"
+          >
+            Login
+          </Link>
 
         </div>
 
