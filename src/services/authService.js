@@ -1,66 +1,27 @@
-/**
- * src/services/authService.js
- */
-
+// src/services/authService.js
+import publicApi from "./publicApi";
 import api from "./api";
 
-const saveSession = (token, user) => {
-  localStorage.setItem("neon_token", token);
-  localStorage.setItem("neon_user", JSON.stringify(user));
-};
+export const authService = {
+  // Públicos (no requieren token)
+  login: async (credentials) => {
+    const response = await publicApi.post("/auth/login", credentials);
+    return response.data; // { success, token, rol }
+  },
 
-const clearSession = () => {
-  localStorage.removeItem("neon_token");
-  localStorage.removeItem("neon_user");
-};
+  forgotPassword: async (email) => {
+    const response = await publicApi.post("/auth/forgot-password", { email });
+    return response.data;
+  },
 
-export const getStoredUser = () => {
-  try {
-    const raw = localStorage.getItem("neon_user");
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
+  resetPassword: async (data) => {
+    const response = await publicApi.post("/auth/reset-password", data);
+    return response.data;
+  },
 
-export const hasToken = () => Boolean(localStorage.getItem("neon_token"));
-
-export const loginRequest = async ({ email, password }) => {
-  const { data } = await api.post("/auth/login", { email, password });
-
-  const token = data.token;
-  const user  = data.user;
-
-  if (!token || !user) {
-    throw new Error("Respuesta inesperada del servidor.");
-  }
-
-  saveSession(token, user);
-  return { token, user };
-};
-
-export const registerRequest = async ({ docId, name, email, phone, password }) => {
-  const { data } = await api.post("/auth/register", {
-    docId, name, email, phone, password
-  });
-
-  const token = data.token;
-  const user  = data.user;
-
-  if (!token || !user) {
-    throw new Error("Respuesta inesperada del servidor al registrar.");
-  }
-
-  saveSession(token, user);
-  return { token, user };
-};
-
-export const logoutRequest = async () => {
-  try {
-    await api.post("/auth/logout");
-  } catch {
-    // Si el token ya expiró igual limpiamos sesión local
-  } finally {
-    clearSession();
-  }
+  // Requiere token
+  logout: async () => {
+    const response = await api.post("/auth/logout");
+    return response.data;
+  },
 };
