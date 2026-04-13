@@ -24,8 +24,8 @@ export default function LoginPage() {
   const onSubmit = async (data) => {
     clearError();
     const result = await login({ 
-      email: data.email, 
-      password: data.password 
+      correo_usu: data.email, 
+      password_usu: data.password 
     });
     
     if (result.success) {

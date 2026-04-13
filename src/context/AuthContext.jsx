@@ -26,11 +26,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   // ✅ LOGIN
-  const login = useCallback(async ({ email, password }) => {
+  const login = useCallback(async ({ correo_usu, password_usu }) => {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser, token } = await loginRequest({ email, password });
+      const { user: apiUser, token } = await loginRequest({ correo_usu, password_usu });
       setUser(apiUser);
       return { 
         success: true, 
