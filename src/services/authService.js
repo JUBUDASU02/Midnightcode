@@ -9,13 +9,13 @@ export const authService = {
     return response.data; // { success, token, rol }
   },
 
-  forgotPassword: async (email) => {
-    const response = await publicApi.post("/auth/forgot-password", { email });
+  forgotPassword: async (correo_usu) => {
+    const response = await publicApi.post("/auth/forgot-password", { correo_usu });
     return response.data;
   },
 
-  resetPassword: async (data) => {
-    const response = await publicApi.post("/auth/reset-password", data);
+  resetPassword: async (token, nuevaPassword) => {
+    const response = await publicApi.post("/auth/reset-password", {token, nuevaPassword});
     return response.data;
   },
 
