@@ -11,7 +11,7 @@ export const authService = {
 
   // ✅ REGISTER - Nuevo
   register: async (userData) => {
-    const response = await publicApi.post("/auth/register", userData);
+    const response = await publicApi.post("/usuarios/register", userData);
     return response.data; // { success, token, rol, user }
   },
 

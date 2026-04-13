@@ -19,7 +19,7 @@ COPY . .
 
 # Variable de entorno para el build
 # Se puede sobreescribir con --build-arg al hacer docker build
-ARG VITE_API_URL=http://localhost:3000/api
+ARG VITE_API_URL=https://7p20g10h-3000.use2.devtunnels.ms/api
 ENV VITE_API_URL=$VITE_API_URL
 
 # Compilar la app React para producción

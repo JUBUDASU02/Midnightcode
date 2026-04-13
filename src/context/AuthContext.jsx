@@ -6,6 +6,7 @@ import {
   logoutRequest,
   getStoredUser,
 } from "../services/authService";
+import { authService } from "../services/authService";
 
 const AuthContext = createContext(null);
 
@@ -45,16 +46,18 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ✅ REGISTER
-  const register = useCallback(async ({ name, email, password }) => {
+  // ✅ REGISTER - Corregido con todos los campos incluyendo teléfono
+  const register = useCallback(async ({ name, email, documentId, telefono, password }) => {
     setAuthError(null);
     setLoading(true);
     try {
       const { user: apiUser, token } = await registerRequest({ 
-        nombre: name,      // Mapeo para el backend
-        correo_usu: email, // Mapeo para el backend
-        password: password,
-        rol: "usuario"     // Rol por defecto
+        nombre_usu: name,
+        correo_usu: email,
+        doc_identidad: documentId,
+        telefono_usu: telefono,  // ✅ Teléfono agregado
+        password_usu: password,
+        cod_rol: 1
       });
       setUser(apiUser);
       return { 

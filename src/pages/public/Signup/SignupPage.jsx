@@ -4,11 +4,24 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 
+// ✅ Schema con documento de identidad y teléfono
 const schema = yup.object({
   name: yup.string().min(2, "Mínimo 2 caracteres").required("El nombre es requerido"),
   email: yup.string().email("Correo inválido").required("El correo es requerido"),
+  documentId: yup
+    .string()
+    .min(6, "Mínimo 6 caracteres")
+    .max(20, "Máximo 20 caracteres")
+    .matches(/^[0-9]+$/, "Solo números permitidos")
+    .required("El documento de identidad es requerido"),
+  telefono: yup
+    .string()
+    .min(10, "Mínimo 10 caracteres")  // ✅ Corregido: mínimo 10
+    .max(15, "Máximo 15 caracteres")
+    .matches(/^[0-9]+$/, "Solo números permitidos")
+    .required("El teléfono es requerido"),
   password: yup.string().min(6, "Mínimo 6 caracteres").required("La contraseña es requerida"),
   confirmPassword: yup.string()
     .oneOf([yup.ref("password")], "Las contraseñas no coinciden")
@@ -30,11 +43,12 @@ export default function RegisterPage() {
     const result = await authRegister({
       name: data.name,
       email: data.email,
+      telefono: data.telefono,      // ✅ Enviar teléfono
+      documentId: data.documentId,
       password: data.password,
     });
     
     if (result.success) {
-      // Redirigir según el rol del usuario registrado
       const dest =
         result.role === "admin" ? "/admin" :
         result.role === "dj" ? "/dj" :
@@ -46,7 +60,7 @@ export default function RegisterPage() {
 
   return (
     <div className="relative flex min-h-screen w-full overflow-hidden bg-background-dark text-slate-100 font-display">
-      {/* LEFT SIDE */}
+      {/* LEFT SIDE - Igual */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-center items-center px-12 overflow-hidden border-r border-primary/10">
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/20 via-transparent to-black" />
         <div className="relative z-10 flex flex-col items-start max-w-md">
@@ -96,7 +110,7 @@ export default function RegisterPage() {
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                {/* Nombre */}
+                {/* Nombre completo */}
                 <div className="space-y-2">
                   <label className="text-sm text-slate-300 ml-1">Nombre completo</label>
                   <div className="relative">
@@ -111,7 +125,7 @@ export default function RegisterPage() {
                   {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
                 </div>
 
-                {/* Email */}
+                {/* Correo electrónico */}
                 <div className="space-y-2">
                   <label className="text-sm text-slate-300 ml-1">Correo electrónico</label>
                   <div className="relative">
@@ -126,7 +140,37 @@ export default function RegisterPage() {
                   {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
                 </div>
 
-                {/* Passwords */}
+                {/* Documento de identidad */}
+                <div className="space-y-2">
+                  <label className="text-sm text-slate-300 ml-1">Documento de identidad</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">badge</span>
+                    <input
+                      type="text"
+                      placeholder="1234567890"
+                      {...register("documentId")}
+                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  {errors.documentId && <p className="text-red-400 text-xs mt-1">{errors.documentId.message}</p>}
+                </div>
+
+                {/* ✅ Teléfono - CORREGIDO el error del mensaje */}
+                <div className="space-y-2">
+                  <label className="text-sm text-slate-300 ml-1">Teléfono</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">call</span>
+                    <input
+                      type="text"
+                      placeholder="3001234567"
+                      {...register("telefono")}
+                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  {errors.telefono && <p className="text-red-400 text-xs mt-1">{errors.telefono.message}</p>}
+                </div>
+
+                {/* Contraseñas */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm text-slate-300 ml-1">Contraseña</label>
