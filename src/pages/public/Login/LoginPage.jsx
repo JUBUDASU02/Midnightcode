@@ -1,22 +1,21 @@
+// src/pages/auth/LoginPage.jsx
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
-
-// ✅ BUG-03 FIX: LoginPage conectado a useAuth — onSubmit llama login() real
+import { useAuth } from "../../context/AuthContext";
 
 const schema = yup.object({
-  email:    yup.string().email("Correo inválido").required("El correo es requerido"),
+  email: yup.string().email("Correo inválido").required("El correo es requerido"),
   password: yup.string().min(6, "Mínimo 6 caracteres").required("La contraseña es requerida"),
 });
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const { login, authError, clearError, loading } = useAuth();
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -24,12 +23,16 @@ export default function LoginPage() {
 
   const onSubmit = async (data) => {
     clearError();
-    const result = await login({ email: data.email, password: data.password });
+    const result = await login({ 
+      email: data.email, 
+      password: data.password 
+    });
+    
     if (result.success) {
       const from = location.state?.from?.pathname;
       const dest =
-        result.role === "admin"    ? "/admin"    :
-        result.role === "dj"       ? "/dj"       :
+        result.role === "admin" ? "/admin" :
+        result.role === "dj" ? "/dj" :
         result.role === "empleado" ? "/empleado" :
         "/dashboard";
       navigate(from || dest, { replace: true });
@@ -38,7 +41,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden">
-
       {/* LEFT PANEL */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-background-dark items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -57,7 +59,6 @@ export default function LoginPage() {
           <p className="text-slate-400 text-xl max-w-md leading-relaxed">
             Step into a world where the music never stops and the night is always young.
           </p>
-          {/* Credenciales demo visibles */}
           <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 text-left w-full max-w-sm">
             <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2">Demo credentials</p>
             <p className="text-slate-300 text-sm">User: <span className="text-white font-mono">user@neon.com</span> / <span className="text-white font-mono">password123</span></p>
@@ -74,7 +75,6 @@ export default function LoginPage() {
 
       {/* RIGHT PANEL */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 lg:p-24 relative bg-background-light dark:bg-background-dark">
-
         {/* Mobile logo */}
         <div className="lg:hidden absolute top-10 left-10 flex items-center gap-3">
           <div className="size-8 text-primary">
@@ -91,7 +91,6 @@ export default function LoginPage() {
             <p className="text-slate-400">Ingresa tus credenciales para acceder al portal.</p>
           </div>
 
-          {/* Error de auth */}
           {authError && (
             <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
               {authError}
@@ -99,7 +98,6 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
             <div>
               <label className="text-sm text-white mb-2 block">Correo electrónico</label>
               <div className="relative">
@@ -150,7 +148,6 @@ export default function LoginPage() {
               {loading ? "Ingresando..." : "Entrar"}
               <span className="material-symbols-outlined">arrow_forward</span>
             </button>
-
           </form>
 
           <p className="mt-10 text-center text-sm text-slate-500">

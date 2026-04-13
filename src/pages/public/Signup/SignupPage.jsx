@@ -1,20 +1,19 @@
+// src/pages/auth/RegisterPage.jsx
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
-
-// ✅ BUG-04 FIX: SignupPage conectado con react-hook-form + yup + useAuth
+import { useAuth } from "../../context/AuthContext";
 
 const schema = yup.object({
-  name:            yup.string().min(2, "Mínimo 2 caracteres").required("El nombre es requerido"),
-  email:           yup.string().email("Correo inválido").required("El correo es requerido"),
-  password:        yup.string().min(6, "Mínimo 6 caracteres").required("La contraseña es requerida"),
+  name: yup.string().min(2, "Mínimo 2 caracteres").required("El nombre es requerido"),
+  email: yup.string().email("Correo inválido").required("El correo es requerido"),
+  password: yup.string().min(6, "Mínimo 6 caracteres").required("La contraseña es requerida"),
   confirmPassword: yup.string()
     .oneOf([yup.ref("password")], "Las contraseñas no coinciden")
     .required("Confirma tu contraseña"),
-  terms:           yup.boolean().oneOf([true], "Debes aceptar los términos"),
+  terms: yup.boolean().oneOf([true], "Debes aceptar los términos"),
 });
 
 export default function RegisterPage() {
@@ -29,25 +28,31 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     clearError();
     const result = await authRegister({
-      name:     data.name,
-      email:    data.email,
+      name: data.name,
+      email: data.email,
       password: data.password,
     });
+    
     if (result.success) {
-      navigate("/dashboard", { replace: true });
+      // Redirigir según el rol del usuario registrado
+      const dest =
+        result.role === "admin" ? "/admin" :
+        result.role === "dj" ? "/dj" :
+        result.role === "empleado" ? "/empleado" :
+        "/dashboard";
+      navigate(dest, { replace: true });
     }
   };
 
   return (
     <div className="relative flex min-h-screen w-full overflow-hidden bg-background-dark text-slate-100 font-display">
-
       {/* LEFT SIDE */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-center items-center px-12 overflow-hidden border-r border-primary/10">
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/20 via-transparent to-black" />
         <div className="relative z-10 flex flex-col items-start max-w-md">
           <div className="flex items-center gap-3 mb-12">
             <span className="material-symbols-outlined text-primary text-4xl">diamond</span>
-            <span className="text-3xl font-bold uppercase">Elite Nightlife</span>
+            <span className="text-3xl font-bold uppercase">NOCTURNA</span>
           </div>
           <h1 className="text-6xl xl:text-8xl font-black leading-none tracking-tight mb-6 uppercase">
             Únete a la <br />
@@ -70,12 +75,11 @@ export default function RegisterPage() {
       {/* RIGHT SIDE */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md">
-
           {/* Mobile logo */}
           <div className="lg:hidden flex justify-center mb-8">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-3xl">diamond</span>
-              <span className="text-2xl font-bold uppercase">Elite</span>
+              <span className="text-2xl font-bold uppercase">NOCTURNA</span>
             </div>
           </div>
 
@@ -92,7 +96,6 @@ export default function RegisterPage() {
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
                 {/* Nombre */}
                 <div className="space-y-2">
                   <label className="text-sm text-slate-300 ml-1">Nombre completo</label>
@@ -102,10 +105,10 @@ export default function RegisterPage() {
                       type="text"
                       placeholder="John Doe"
                       {...register("name")}
-                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none"
+                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
-                  {errors.name && <p className="text-red-400 text-xs">{errors.name.message}</p>}
+                  {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
                 </div>
 
                 {/* Email */}
@@ -117,10 +120,10 @@ export default function RegisterPage() {
                       type="email"
                       placeholder="nombre@ejemplo.com"
                       {...register("email")}
-                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none"
+                      className="w-full pl-12 pr-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
-                  {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
+                  {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
                 </div>
 
                 {/* Passwords */}
@@ -132,7 +135,7 @@ export default function RegisterPage() {
                         type={showPass ? "text" : "password"}
                         placeholder="••••••"
                         {...register("password")}
-                        className="w-full px-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 outline-none pr-12"
+                        className="w-full px-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 outline-none pr-12 focus:ring-2 focus:ring-primary"
                       />
                       <button
                         type="button"
@@ -144,7 +147,7 @@ export default function RegisterPage() {
                         </span>
                       </button>
                     </div>
-                    {errors.password && <p className="text-red-400 text-xs">{errors.password.message}</p>}
+                    {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm text-slate-300 ml-1">Confirmar</label>
@@ -152,9 +155,9 @@ export default function RegisterPage() {
                       type="password"
                       placeholder="••••••"
                       {...register("confirmPassword")}
-                      className="w-full px-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 outline-none"
+                      className="w-full px-4 py-4 bg-primary/5 border border-primary/20 rounded-xl text-slate-100 outline-none focus:ring-2 focus:ring-primary"
                     />
-                    {errors.confirmPassword && <p className="text-red-400 text-xs">{errors.confirmPassword.message}</p>}
+                    {errors.confirmPassword && <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>}
                   </div>
                 </div>
 
@@ -163,7 +166,7 @@ export default function RegisterPage() {
                   <input
                     type="checkbox"
                     {...register("terms")}
-                    className="size-4 rounded border-primary/30 bg-primary/10 text-primary mt-0.5"
+                    className="size-4 rounded border-primary/30 bg-primary/10 text-primary mt-0.5 focus:ring-primary"
                   />
                   <label className="text-xs text-slate-400">
                     Acepto los{" "}
@@ -172,16 +175,15 @@ export default function RegisterPage() {
                     <a href="#" className="text-primary hover:underline">Política de Privacidad</a>
                   </label>
                 </div>
-                {errors.terms && <p className="text-red-400 text-xs">{errors.terms.message}</p>}
+                {errors.terms && <p className="text-red-400 text-xs mt-1">{errors.terms.message}</p>}
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 text-white font-bold py-4 rounded-xl neon-glow flex items-center justify-center gap-2"
+                  className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 text-white font-bold py-4 rounded-xl neon-glow flex items-center justify-center gap-2 transition-all"
                 >
                   {loading ? "Creando cuenta..." : "Obtener mi Pase"}
                 </button>
-
               </form>
 
               <p className="mt-8 text-center text-sm text-slate-400">

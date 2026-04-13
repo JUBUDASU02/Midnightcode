@@ -1,7 +1,4 @@
-/**
- * src/context/AuthContext.jsx
- */
-
+// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useCallback } from "react";
 import {
   loginRequest,
@@ -12,6 +9,7 @@ import {
 
 const AuthContext = createContext(null);
 
+// Mapeo de roles a rutas
 export const roleRedirect = (role) => {
   switch (role) {
     case "admin":    return "/admin";
@@ -22,19 +20,24 @@ export const roleRedirect = (role) => {
 };
 
 export function AuthProvider({ children }) {
-  const [user,      setUser]      = useState(() => getStoredUser());
+  const [user, setUser] = useState(() => getStoredUser());
   const [authError, setAuthError] = useState(null);
-  const [loading,   setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  // ✅ LOGIN
   const login = useCallback(async ({ email, password }) => {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser } = await loginRequest({ email, password });
+      const { user: apiUser, token } = await loginRequest({ email, password });
       setUser(apiUser);
-      return { success: true, role: apiUser.role };
+      return { 
+        success: true, 
+        role: apiUser?.rol || apiUser?.role,
+        user: apiUser 
+      };
     } catch (err) {
-      const msg = err.message || "Error al iniciar sesión";
+      const msg = err.response?.data?.message || err.message || "Error al iniciar sesión";
       setAuthError(msg);
       return { success: false, error: msg };
     } finally {
@@ -42,15 +45,25 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const register = useCallback(async ({ docId, name, email, phone, password }) => {
+  // ✅ REGISTER
+  const register = useCallback(async ({ name, email, password }) => {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser } = await registerRequest({ docId, name, email, phone, password });
+      const { user: apiUser, token } = await registerRequest({ 
+        nombre: name,      // Mapeo para el backend
+        correo_usu: email, // Mapeo para el backend
+        password: password,
+        rol: "usuario"     // Rol por defecto
+      });
       setUser(apiUser);
-      return { success: true, role: apiUser.role };
+      return { 
+        success: true, 
+        role: apiUser?.rol || apiUser?.role,
+        user: apiUser 
+      };
     } catch (err) {
-      const msg = err.message || "Error al registrar la cuenta";
+      const msg = err.response?.data?.message || err.message || "Error al registrar usuario";
       setAuthError(msg);
       return { success: false, error: msg };
     } finally {
@@ -58,6 +71,39 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // ✅ FORGOT PASSWORD
+  const forgotPassword = useCallback(async (correo_usu) => {
+    setAuthError(null);
+    setLoading(true);
+    try {
+      const response = await authService.forgotPassword(correo_usu);
+      return response;
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || "Error al enviar el correo";
+      setAuthError(msg);
+      return { success: false, message: msg };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // ✅ RESET PASSWORD
+  const resetPassword = useCallback(async (token, nuevaPassword) => {
+    setAuthError(null);
+    setLoading(true);
+    try {
+      const response = await authService.resetPassword(token, nuevaPassword);
+      return response;
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || "Error al restablecer la contraseña";
+      setAuthError(msg);
+      return { success: false, message: msg };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // ✅ LOGOUT
   const logout = useCallback(async () => {
     setLoading(true);
     try {
@@ -81,7 +127,19 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, authError, loading, login, register, logout, updateUser, clearError }}
+      value={{
+        user,
+        authError,
+        loading,
+        login,
+        register,
+        forgotPassword,
+        resetPassword,
+        logout,
+        updateUser,
+        clearError,
+        isAuthenticated: !!user,
+      }}
     >
       {children}
     </AuthContext.Provider>
