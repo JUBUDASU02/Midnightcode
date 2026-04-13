@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 export default function Hero() {
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <section id="hero" className="relative h-screen w-full flex items-center justify-center overflow-hidden">
 
       <div className="absolute inset-0 z-0">
         <img
@@ -15,37 +16,41 @@ export default function Hero() {
       <div className="relative z-10 text-center px-4 max-w-5xl">
 
         <span className="inline-block px-4 py-1 rounded-full border border-primary/40 text-primary text-xs font-bold uppercase tracking-[0.3em] mb-6 glass">
-          The Eclipse of Nightlife
+          El Eclipse de la Vida Nocturna
         </span>
 
         <h1 className="text-6xl md:text-9xl font-black text-white leading-none tracking-tighter mb-8 italic uppercase">
-          NEON{" "}
+          SOBRECARGA{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400 text-glow">
-            OVERLOAD
+            NEON
           </span>
         </h1>
 
         <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-          Step into a world where high-energy meets ultra-luxury. Experience
-          the deep pulse of electric purple in the city's most exclusive sanctuary.
+          Entra a un universo donde la energía, la música y el lujo se fusionan.
+          Descubre el pulso eléctrico de la noche en el santuario más exclusivo de la ciudad.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
 
+          <Link to="/login">
           <button className="bg-primary text-white px-10 py-4 rounded-xl font-black text-lg neon-glow uppercase hover:translate-y-[-2px] transition-all">
-            Request VIP Access
+            Reservar Vip
           </button>
+          </Link>
 
+          <Link to="/login">
           <button className="glass text-white px-10 py-4 rounded-xl font-black text-lg uppercase hover:bg-primary/20 transition-all border border-white/10">
-            Watch Teaser
+            Canción
           </button>
+          </Link>
 
         </div>
       </div>
 
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
         <p className="text-[10px] uppercase tracking-[0.5em]">
-          Scroll to Immerse
+          Desliza para sumergirte
         </p>
 
         <span className="material-symbols-outlined animate-bounce">

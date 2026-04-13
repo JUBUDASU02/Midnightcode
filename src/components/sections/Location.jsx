@@ -20,8 +20,8 @@ export default function Location() {
                   <span className="material-symbols-outlined text-primary text-5xl text-glow animate-pulse">
                     location_on
                   </span>
-                  <span className="bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest mt-2">
-                    WE ARE HERE
+                  <span className="bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest mt-2 cursor-pointer">
+                    Estas Aqui
                   </span>
                 </div>
               </div>
@@ -31,18 +31,18 @@ export default function Location() {
           {/* INFO */}
           <div className="order-1 lg:order-2">
             <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-2">
-              The Sanctuary
+              El Santuario
             </h2>
 
             <h3 className="text-4xl md:text-6xl font-black text-white italic uppercase mb-6">
-              Neo-Tokyo
+              Monaco
             </h3>
 
             <div className="space-y-6">
 
               <p className="text-slate-300 text-lg leading-relaxed italic">
-                "Located in the heart of the Shibuya Neon District, Overload is
-                hidden behind an unmarked obsidian door."
+                "Ubicado en el corazón de la ciudad, Overload es un refugio oculto donde la música,
+                las luces y la energía de la noche crean una experiencia única."
               </p>
 
               {/* ADDRESS */}
@@ -53,12 +53,12 @@ export default function Location() {
 
                 <div>
                   <h4 className="text-white font-bold uppercase tracking-wider">
-                    Address
+                    Dirección
                   </h4>
 
                   <p className="text-slate-400">
-                    Level -3, Obsidian Tower <br />
-                    4-2-1 Shibuya, Tokyo 150-0002
+                    Zona T, Calle 82 #12-45<br />
+                    Bogotá, Colombia
                   </p>
                 </div>
               </div>
@@ -71,19 +71,19 @@ export default function Location() {
 
                 <div>
                   <h4 className="text-white font-bold uppercase tracking-wider">
-                    Ritual Hours
+                    Horarios
                   </h4>
 
                   <p className="text-slate-400">
-                    Wed — Sun: 10:00 PM - 05:00 AM <br />
-                    Closed Mon & Tue
+                    Miércoles — Domingo: 10:00 PM - 5:00 AM  <br />
+                    Cerrado Lunes y Martes
                   </p>
                 </div>
               </div>
 
               {/* BUTTON */}
               <button className="bg-primary/20 border border-primary/40 text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-primary transition-all">
-                Get Directions
+                Obtener Dirrección
               </button>
 
             </div>
