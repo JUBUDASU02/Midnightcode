@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup        from "yup";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth, roleRedirect } from "../../../context/AuthContext";
+import { useAuth, roleRedirect } from "../../context/AuthContext";
 
 const schema = yup.object({
   email:    yup.string().email("Correo inválido").required("El correo es requerido"),
@@ -169,7 +169,7 @@ export default function LoginPage() {
                 </button>
               </div>
               {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>}
-              {/* Forgot password — debajo del campo de contraseña */}
+              {/* Forgot password */}
               <div className="mt-2 text-right">
                 <Link to="/forgot-password" className="text-xs text-primary hover:underline">
                   ¿Olvidaste tu contraseña?

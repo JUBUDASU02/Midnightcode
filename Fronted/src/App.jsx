@@ -3,15 +3,15 @@ import { Suspense, lazy } from "react"
 import "./assets/css/style.css"
 
 // Auth guards
-import PrivateRoute  from "./components/Auth/PrivateRoute"
-import PublicRoute   from "./components/Auth/PublicRoute"
+import PrivateRoute  from "./components/auth/PrivateRoute"
+import PublicRoute   from "./components/auth/PublicRoute"
 
 // Public pages
-const HomePage      = lazy(() => import("./pages/public/Home/Home"))
-const LoginPage     = lazy(() => import("./pages/public/Login/LoginPage"))
-const RegisterPage  = lazy(() => import("./pages/public/Signup/SignupPage"))
-const ForgotPassword = lazy(() => import("./pages/public/ForgotPasswordPage/ForgotPasswordPage"))
-const ResetPassword  = lazy(() => import("./pages/public/ResetPasswordPage/ResetPasswordPage"))
+const HomePage       = lazy(() => import("./pages/public/Home"))
+const LoginPage      = lazy(() => import("./pages/public/LoginPage"))
+const RegisterPage   = lazy(() => import("./pages/public/SignupPage"))
+const ForgotPassword = lazy(() => import("./pages/public/ForgotPasswordPage"))
+const ResetPassword  = lazy(() => import("./pages/public/ResetPasswordPage"))
 
 // Private — Admin
 const AdminDashboard = lazy(() => import("./pages/Private/Admin/Dashboard"))
