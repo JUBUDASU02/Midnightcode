@@ -1,235 +1,131 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+// pages/ResetPasswordPage.jsx
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useParams, useNavigate } from "react-router-dom";
+import PasswordInput from "../components/auth/PasswordInput";
+import SubmitButton from "../components/auth/SubmitButton";
+import PasswordStrength from "../components/auth/PasswordStrength";
+import LeftPanel from "../components/auth/LeftPanel";
 
-/* ---------------- VALIDATION ---------------- */
-
-const schema = yup.object({
-  password: yup
-    .string()
-    .required("Password required")
+// ✅ Esquema con Zod
+const resetPasswordSchema = z.object({
+  password: z.string()
+    .min(1, "Password is required")
     .min(12, "Minimum 12 characters")
-    .matches(/[0-9]/, "Must contain a number")
-    .matches(/[!@#$%^&*]/, "Must contain a symbol"),
-
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Confirm your password"),
-})
-
-/* ---------------- PAGE ---------------- */
+    .regex(/[0-9]/, "Must contain a number")
+    .regex(/[!@#$%^&*]/, "Must contain a symbol"),
+  confirmPassword: z.string()
+    .min(1, "Please confirm your password")
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords must match",
+  path: ["confirmPassword"]
+});
 
 export default function ResetPasswordPage() {
-  return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-background-dark font-display">
+  const { token } = useParams();
+  const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
 
-      <LeftVisual />
-
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-20">
-        <ResetForm />
-      </div>
-
-    </div>
-  )
-}
-
-/* ---------------- LEFT VISUAL ---------------- */
-
-function LeftVisual() {
-  return (
-    <div className="hidden lg:flex lg:w-1/2 relative bg-black items-center justify-center overflow-hidden">
-
-      <div className="absolute inset-0 opacity-40">
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/30 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center text-center p-12">
-
-        <div className="mb-8 w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center shadow-[0_0_20px_rgba(127,13,242,0.5)]">
-          <span className="material-symbols-outlined text-5xl text-white">
-            flare
-          </span>
-        </div>
-
-        <h1 className="text-6xl font-bold italic text-white">
-          ECLIPSE
-        </h1>
-
-        <p className="text-primary tracking-[0.3em] uppercase">
-          Nightlife redefined
-        </p>
-
-      </div>
-
-      <div className="absolute bottom-10 left-10 text-slate-400 text-sm tracking-widest">
-        EST. 2024 • PREMIUM EXPERIENCE
-      </div>
-
-    </div>
-  )
-}
-
-/* ---------------- FORM ---------------- */
-
-function ResetForm() {
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm({
-    resolver: yupResolver(schema)
-  })
+    resolver: zodResolver(resetPasswordSchema)
+  });
 
-  const password = watch("password","")
+  const password = watch("password", "");
 
-  const onSubmit = (data) => {
-    console.log("reset password", data)
-  }
-
-  return (
-    <div className="w-full max-w-md bg-[#191022]/60 backdrop-blur border border-primary/20 p-8 lg:p-10 rounded-xl">
-
-      <div className="mb-10">
-        <h2 className="text-3xl font-bold text-white mb-3">
-          Reset Password
-        </h2>
-
-        <p className="text-slate-400">
-          Secure your account with a new strong password.
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
-        <PasswordInput
-          label="New Password"
-          name="password"
-          register={register}
-          error={errors.password}
-        />
-
-        <PasswordStrength password={password} />
-
-        <PasswordInput
-          label="Confirm Password"
-          name="confirmPassword"
-          register={register}
-          error={errors.confirmPassword}
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg transition transform hover:scale-[1.02]"
-        >
-          Update Password
-        </button>
-
-      </form>
-
-      <div className="mt-8 pt-8 border-t border-primary/10">
-        <a className="text-sm text-slate-400 hover:text-white flex justify-center gap-2">
-          <span className="material-symbols-outlined text-sm">
-            keyboard_backspace
-          </span>
-          Back to login
-        </a>
-      </div>
-
-    </div>
-  )
-}
-
-/* ---------------- PASSWORD INPUT ---------------- */
-
-function PasswordInput({ label, name, register, error }) {
-
-  const [show, setShow] = useState(false)
+  const onSubmit = async (data) => {
+    // Limpiar error anterior
+    setServerError("");
+    
+    try {
+      console.log("Reset password with token:", token, data.password);
+      
+      // ✅ Simular llamada a API (reemplaza con tu API real)
+      // const response = await fetch('/api/reset-password', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ token, password: data.password })
+      // });
+      
+      // if (!response.ok) throw new Error('Error al resetear la contraseña');
+      
+      // ✅ Si todo sale bien, redirigir al login
+      navigate("/login", { 
+        state: { message: "Password reset successfully! Please login." }
+      });
+      
+    } catch (error) {
+      // ✅ Ahora setServerError está correctamente definido
+      setServerError("Failed to reset password. Please try again.");
+      console.error("Reset password error:", error);
+    }
+  };
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-background-dark font-display">
+      <LeftPanel
+        title="ECLIPSE"
+        subtitle="Nightlife redefined"
+        icon="flare"
+        showDots={false}
+        showEstablished={true}
+        centerContent={
+          <div className="mb-8 w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center shadow-[0_0_20px_rgba(127,13,242,0.5)]">
+            <span className="material-symbols-outlined text-5xl text-white">flare</span>
+          </div>
+        }
+      />
 
-      <label className="block text-sm font-medium text-slate-300">
-        {label}
-      </label>
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-20">
+        <div className="w-full max-w-md bg-[#191022]/60 backdrop-blur border border-primary/20 p-8 lg:p-10 rounded-xl">
+          <div className="mb-10">
+            <h2 className="text-3xl font-bold text-white mb-3">Reset Password</h2>
+            <p className="text-slate-400">Secure your account with a new strong password.</p>
+          </div>
 
-      <div className="relative">
+          {/* ✅ Mostrar error si existe */}
+          {serverError && (
+            <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+              {serverError}
+            </div>
+          )}
 
-        <input
-          type={show ? "text" : "password"}
-          {...register(name)}
-          placeholder="••••••••"
-          className="w-full bg-background-dark/50 border border-primary/30 rounded-lg py-4 px-4 text-white focus:ring-2 focus:ring-primary outline-none"
-        />
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <PasswordInput
+              label="New Password"
+              name="password"
+              register={register}
+              error={errors.password?.message}
+            />
+            
+            <PasswordStrength password={password} />
+            
+            <PasswordInput
+              label="Confirm Password"
+              name="confirmPassword"
+              register={register}
+              error={errors.confirmPassword?.message}
+            />
+            
+            <SubmitButton loading={isSubmitting} loadingText="Updating..." icon="">
+              Update Password
+            </SubmitButton>
+          </form>
 
-        <button
-          type="button"
-          onClick={() => setShow(!show)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-primary"
-        >
-          <span className="material-symbols-outlined">
-            visibility
-          </span>
-        </button>
-
+          <div className="mt-8 pt-8 border-t border-primary/10">
+            <a href="/login" className="text-sm text-slate-400 hover:text-white flex justify-center gap-2">
+              <span className="material-symbols-outlined text-sm">keyboard_backspace</span>
+              Back to login
+            </a>
+          </div>
+        </div>
       </div>
-
-      {error && (
-        <p className="text-xs text-red-400">
-          {error.message}
-        </p>
-      )}
-
     </div>
-  )
-}
-
-/* ---------------- PASSWORD STRENGTH ---------------- */
-
-function PasswordStrength({ password }) {
-
-  const checks = [
-    password.length >= 12,
-    /[0-9]/.test(password),
-    /[!@#$%^&*]/.test(password),
-  ]
-
-  const strength = checks.filter(Boolean).length
-  const label = ["Weak", "Medium", "Strong", "Very Strong"][strength]
-
-  return (
-    <div className="space-y-3">
-
-      <div className="flex justify-between text-xs uppercase">
-        <span className="text-slate-400">
-          Security Strength
-        </span>
-
-        <span className="text-primary">
-          {label}
-        </span>
-      </div>
-
-      <div className="flex gap-1.5 h-1.5 w-full">
-        {[0,1,2,3].map((i) => (
-          <div
-            key={i}
-            className={`flex-1 rounded-full ${
-              i <= strength
-                ? "bg-primary shadow-[0_0_10px_rgba(127,13,242,0.6)]"
-                : "bg-primary/20"
-            }`}
-          />
-        ))}
-      </div>
-
-      <p className="text-[10px] text-slate-500">
-        Include at least 12 characters, a symbol, and a number.
-      </p>
-
-    </div>
-  )
+  );
 }
