@@ -45,7 +45,7 @@ export default function LoginPage() {
   };
 
   return (
-    // ✅ Asegurar altura completa de la pantalla
+    
     <div className="flex flex-col md:flex-row min-h-screen h-screen w-full overflow-hidden bg-background-dark">
       {/* Left Panel con imagen */}
       <LeftPanel

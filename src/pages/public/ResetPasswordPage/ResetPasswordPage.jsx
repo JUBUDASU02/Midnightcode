@@ -10,7 +10,7 @@ import SubmitButton from "../../../components/Auth/SubmitButton";
 import PasswordStrength from "../../../components/Auth/PasswordStrength";
 import LeftPanel from "../../../components/Auth/LeftPanel";
 
-// ✅ Esquema con Zod - Validación fuerte de contraseña
+
 const resetPasswordSchema = z.object({
   password: z.string()
     .min(1, "La contraseña es requerida")

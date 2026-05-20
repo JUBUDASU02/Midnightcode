@@ -10,7 +10,7 @@ import SubmitButton from "../../../components/Auth/SubmitButton";
 import GlassCard from "../../../components/Auth/GlassCard";
 import SocialProof from "../../../components/Auth/SocialProof";
 
-// ✅ Esquema con Zod - Incluye documento y teléfono
+
 const registerSchema = z.object({
   docId: z.string()
     .min(1, "El documento es requerido")
