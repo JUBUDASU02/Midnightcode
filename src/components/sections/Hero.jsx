@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import publicApi from "../../../services/publicApi";
+import publicApi from "../../services/publicApi";
 
 export default function Hero() {
   // parallax offset
