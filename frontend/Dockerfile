@@ -1,49 +1,48 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# STAGE 1 — BUILD
-# Usa Node para instalar dependencias y compilar el bundle de producción
-# ─────────────────────────────────────────────────────────────────────────────
-FROM node:20-alpine AS builder
+# ─── Dependencias instaladas localmente ───────────────────────────────────────
+node_modules
+.npm
 
-# Directorio de trabajo dentro del contenedor
-WORKDIR /app
+# ─── Output de builds anteriores ─────────────────────────────────────────────
+dist
+build
 
-# Copiar package.json y package-lock.json primero
-# (capa separada para aprovechar el cache de Docker)
-COPY package.json package-lock.json ./
+# ─── Git ─────────────────────────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
 
-# Instalar dependencias (incluyendo devDependencies para el build)
-RUN npm ci
+# ─── Variables de entorno locales (nunca deben entrar al build) ───────────────
+.env
+.env.*
+!.env.example
 
-# Copiar el resto del código fuente
-COPY . .
+# ─── Docker ──────────────────────────────────────────────────────────────────
+Dockerfile
+docker-compose*.yml
+.dockerignore
 
-# Variable de entorno para el build
-# Se puede sobreescribir con --build-arg al hacer docker build
-ARG VITE_API_URL=http://localhost:3000/api
-ENV VITE_API_URL=$VITE_API_URL
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+logs/
 
-# Compilar la app React para producción
-# Genera la carpeta /app/dist
-RUN npm run build
+# ─── IDEs y editores ─────────────────────────────────────────────────────────
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# ─────────────────────────────────────────────────────────────────────────────
-# STAGE 2 — SERVE
-# Imagen final: solo Nginx + los archivos estáticos del build
-# Imagen mucho más liviana (~20MB vs ~400MB del stage 1)
-# ─────────────────────────────────────────────────────────────────────────────
-FROM nginx:1.27-alpine AS production
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
 
-# Eliminar la config por defecto de Nginx
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copiar los archivos compilados del stage anterior
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copiar nuestra configuración personalizada de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Nginx escucha en el puerto 80
-EXPOSE 80
-
-# Nginx corre en foreground (requerido por Docker)
-CMD ["nginx", "-g", "daemon off;"]
+# ─── Tests y documentación (no necesarios en producción) ─────────────────────
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+coverage/
+README.md
+docs/

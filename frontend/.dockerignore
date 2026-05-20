@@ -1,44 +1,48 @@
-# .dockerignore
-# Archivos que Docker NO debe copiar al contenedor
-# Esto hace el build más rápido y la imagen más pequeña
+# ─── Dependencias instaladas localmente ───────────────────────────────────────
+node_modules
+.npm
 
-# Dependencias (se instalan dentro del contenedor con npm ci)
-node_modules/
-.npm/
+# ─── Output de builds anteriores ─────────────────────────────────────────────
+dist
+build
 
-# Build anterior (se genera dentro del contenedor)
-dist/
-build/
-
-# Variables de entorno con secretos (nunca van al contenedor)
-.env
-.env.local
-.env.development
-.env.production
-
-# Git
-.git/
+# ─── Git ─────────────────────────────────────────────────────────────────────
+.git
 .gitignore
+.gitattributes
 
-# Logs
+# ─── Variables de entorno locales (nunca deben entrar al build) ───────────────
+.env
+.env.*
+!.env.example
+
+# ─── Docker ──────────────────────────────────────────────────────────────────
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
 *.log
-npm-debug.log*
+logs/
 
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
+# ─── IDEs y editores ─────────────────────────────────────────────────────────
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# OS
+# ─── OS ──────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Testing
+# ─── Tests y documentación (no necesarios en producción) ─────────────────────
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
 coverage/
-*.test.*
-*.spec.*
-
-# Documentación (no es necesaria en producción)
 README.md
-*.md
+docs/
