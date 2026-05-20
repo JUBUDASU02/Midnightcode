@@ -17,6 +17,7 @@ const loginSchema = z.object({
     .min(1, "La contraseña es requerida")
 });
 
+
 export default function LoginPage() {
   const { login, authError, clearError, loading } = useAuth();
   const navigate = useNavigate();
