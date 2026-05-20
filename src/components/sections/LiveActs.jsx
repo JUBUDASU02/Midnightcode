@@ -10,7 +10,7 @@ return(
 
 <div>
 <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-2">
-Resonating This Weekend
+Resonando Este Fin de Semana
 </h2>
 
 <h3 className="text-4xl md:text-6xl font-black text-white italic uppercase">
@@ -19,7 +19,7 @@ Live Acts
 </div>
 
 <button className="text-white border-b border-primary pb-1 font-bold uppercase tracking-widest hover:text-primary transition-all">
-View Full Lineup
+Ver Cartelera Completa
 </button>
 
 </div>
@@ -40,7 +40,7 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuBifF5P0xvYyZBftuwJmumDG
 <div className="absolute bottom-10 left-10">
 
 <span className="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase mb-4 inline-block">
-Headliner / Friday
+Artista Principal / Viernes
 </span>
 
 <h4 className="text-5xl font-black text-white uppercase italic">
@@ -65,7 +65,7 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRW5z3QKvvxc7E4rMXf-Yrb
 <div className="absolute bottom-10 left-10">
 
 <span className="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase mb-4 inline-block">
-Tech-House / Saturday
+Tech House / Sábado
 </span>
 
 <h4 className="text-5xl font-black text-white uppercase italic">

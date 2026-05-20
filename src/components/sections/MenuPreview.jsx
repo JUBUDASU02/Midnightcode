@@ -5,11 +5,11 @@ export default function MenuPreview() {
 
         <div className="text-center mb-16">
           <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-2">
-            Liquid Luxury
+            Liquidos Luxury
           </h2>
 
           <h3 className="text-4xl md:text-6xl font-black text-white italic uppercase">
-            Menu Preview
+            Vista del Menú
           </h3>
         </div>
 
@@ -22,7 +22,7 @@ export default function MenuPreview() {
               <span className="material-symbols-outlined text-primary">
                 local_bar
               </span>
-              Signature Cocktails
+              Cócteles de Autor
             </h4>
 
             <div className="space-y-6">
@@ -73,7 +73,7 @@ export default function MenuPreview() {
               <span className="material-symbols-outlined text-primary">
                 wine_bar
               </span>
-              Prestige Bottles
+              Botellas de Prestigio
             </h4>
 
             <div className="space-y-6">
@@ -121,7 +121,7 @@ export default function MenuPreview() {
 
         <div className="mt-16 text-center">
           <button className="border border-primary text-primary px-8 py-3 rounded-full font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
-            Download Full Menu
+            Descargar Menu Completo
           </button>
         </div>
 

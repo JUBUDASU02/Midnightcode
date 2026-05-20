@@ -5,11 +5,11 @@ export default function VipGallery() {
       <div className="max-w-7xl mx-auto text-center mb-16">
 
         <h3 className="text-4xl md:text-6xl font-black text-white italic uppercase mb-4">
-          VIP Gallery
+          Galería VIP
         </h3>
 
         <p className="text-slate-400 max-w-xl mx-auto">
-          A glimpse into the elite atmosphere that awaits the few who dare to cross the threshold.
+          Un vistazo a la atmósfera exclusiva que espera a quienes se atreven a cruzar el umbral.
         </p>
 
       </div>
