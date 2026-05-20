@@ -3,23 +3,25 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useParams, useNavigate } from "react-router-dom";
-import PasswordInput from "../components/auth/PasswordInput";
-import SubmitButton from "../components/auth/SubmitButton";
-import PasswordStrength from "../components/auth/PasswordStrength";
-import LeftPanel from "../components/auth/LeftPanel";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { resetPasswordRequest } from "../../../services/authService";
+import PasswordInput from "../../../components/Auth/PasswordInput";
+import SubmitButton from "../../../components/Auth/SubmitButton";
+import PasswordStrength from "../../../components/Auth/PasswordStrength";
+import LeftPanel from "../../../components/Auth/LeftPanel";
 
-// ✅ Esquema con Zod
+// ✅ Esquema con Zod - Validación fuerte de contraseña
 const resetPasswordSchema = z.object({
   password: z.string()
-    .min(1, "Password is required")
-    .min(12, "Minimum 12 characters")
-    .regex(/[0-9]/, "Must contain a number")
-    .regex(/[!@#$%^&*]/, "Must contain a symbol"),
+    .min(1, "La contraseña es requerida")
+    .min(8, "Mínimo 8 caracteres")
+    .regex(/[A-Z]/, "Debe contener al menos una mayúscula")
+    .regex(/[0-9]/, "Debe contener al menos un número")
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, "Debe contener al menos un símbolo"),
   confirmPassword: z.string()
-    .min(1, "Please confirm your password")
+    .min(1, "Por favor confirma tu contraseña")
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords must match",
+  message: "Las contraseñas no coinciden",
   path: ["confirmPassword"]
 });
 
@@ -27,12 +29,14 @@ export default function ResetPasswordPage() {
   const { token } = useParams();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm({
     resolver: zodResolver(resetPasswordSchema)
   });
@@ -40,90 +44,145 @@ export default function ResetPasswordPage() {
   const password = watch("password", "");
 
   const onSubmit = async (data) => {
-    // Limpiar error anterior
     setServerError("");
+    setSuccessMessage("");
+    setLoading(true);
     
     try {
-      console.log("Reset password with token:", token, data.password);
+      const response = await resetPasswordRequest(token, data.password);
+      setSuccessMessage(response.message || "Contraseña restablecida exitosamente");
       
-      // ✅ Simular llamada a API (reemplaza con tu API real)
-      // const response = await fetch('/api/reset-password', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ token, password: data.password })
-      // });
-      
-      // if (!response.ok) throw new Error('Error al resetear la contraseña');
-      
-      // ✅ Si todo sale bien, redirigir al login
-      navigate("/login", { 
-        state: { message: "Password reset successfully! Please login." }
-      });
-      
+      setTimeout(() => {
+        navigate("/login", { 
+          state: { 
+            message: "¡Contraseña restablecida exitosamente! Ahora puedes iniciar sesión con tu nueva contraseña." 
+          }
+        });
+      }, 2000);
     } catch (error) {
-      // ✅ Ahora setServerError está correctamente definido
-      setServerError("Failed to reset password. Please try again.");
+      setServerError(error.message || "Error al restablecer la contraseña. El enlace puede haber expirado.");
       console.error("Reset password error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-background-dark font-display">
+    <div className="flex flex-col md:flex-row min-h-screen h-screen w-full overflow-hidden bg-background-dark">
+      {/* Left Panel con imagen */}
       <LeftPanel
         title="ECLIPSE"
-        subtitle="Nightlife redefined"
+        subtitle="Nightlife redefined. Secure your account with a new password."
         icon="flare"
-        showDots={false}
+        backgroundImage="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        showDots={true}
         showEstablished={true}
-        centerContent={
-          <div className="mb-8 w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center shadow-[0_0_20px_rgba(127,13,242,0.5)]">
-            <span className="material-symbols-outlined text-5xl text-white">flare</span>
-          </div>
-        }
       />
 
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-20">
-        <div className="w-full max-w-md bg-[#191022]/60 backdrop-blur border border-primary/20 p-8 lg:p-10 rounded-xl">
-          <div className="mb-10">
-            <h2 className="text-3xl font-bold text-white mb-3">Reset Password</h2>
-            <p className="text-slate-400">Secure your account with a new strong password.</p>
-          </div>
-
-          {/* ✅ Mostrar error si existe */}
-          {serverError && (
-            <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-              {serverError}
+      {/* Right Panel - Formulario */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 overflow-y-auto">
+        <div className="w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="md:hidden flex justify-center mb-8">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-3xl">flare</span>
+              <h2 className="text-2xl font-bold text-white">ECLIPSE</h2>
             </div>
-          )}
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <PasswordInput
-              label="New Password"
-              name="password"
-              register={register}
-              error={errors.password?.message}
-            />
-            
-            <PasswordStrength password={password} />
-            
-            <PasswordInput
-              label="Confirm Password"
-              name="confirmPassword"
-              register={register}
-              error={errors.confirmPassword?.message}
-            />
-            
-            <SubmitButton loading={isSubmitting} loadingText="Updating..." icon="">
-              Update Password
-            </SubmitButton>
-          </form>
-
-          <div className="mt-8 pt-8 border-t border-primary/10">
-            <a href="/login" className="text-sm text-slate-400 hover:text-white flex justify-center gap-2">
-              <span className="material-symbols-outlined text-sm">keyboard_backspace</span>
-              Back to login
-            </a>
           </div>
+
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 sm:p-10 rounded-2xl shadow-2xl">
+            <div className="mb-8 text-center md:text-left">
+              <div className="flex justify-center md:justify-start mb-4">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center shadow-lg">
+                  <span className="material-symbols-outlined text-3xl text-white">lock_reset</span>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-2">Restablecer Contraseña</h2>
+              <p className="text-slate-400">Protege tu cuenta con una nueva contraseña segura.</p>
+            </div>
+
+            {/* Mensaje de éxito */}
+            {successMessage && (
+              <div className="mb-6 p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">check_circle</span>
+                  <span>{successMessage}</span>
+                </div>
+                <p className="text-xs mt-2 text-green-400/80">Redirigiendo al login...</p>
+              </div>
+            )}
+
+            {/* Mensaje de error */}
+            {serverError && (
+              <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">error</span>
+                  <span>{serverError}</span>
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <PasswordInput
+                label="Nueva Contraseña"
+                name="password"
+                register={register}
+                error={errors.password?.message}
+                placeholder="Ingresa tu nueva contraseña"
+              />
+              
+              {/* Indicador de fortaleza de contraseña */}
+              {password && !errors.password && (
+                <PasswordStrength password={password} />
+              )}
+              
+              <PasswordInput
+                label="Confirmar Contraseña"
+                name="confirmPassword"
+                register={register}
+                error={errors.confirmPassword?.message}
+                placeholder="Repite tu nueva contraseña"
+              />
+              
+              <SubmitButton 
+                loading={loading} 
+                loadingText="Actualizando contraseña..." 
+                icon="lock_reset"
+              >
+                Actualizar Contraseña
+              </SubmitButton>
+            </form>
+
+            <div className="mt-8 pt-6 border-t border-white/10">
+              <Link 
+                to="/login" 
+                className="text-sm text-slate-400 hover:text-white flex justify-center gap-2 transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">keyboard_backspace</span>
+                Volver al inicio de sesión
+              </Link>
+            </div>
+
+            {/* Información de seguridad */}
+            <div className="mt-6 p-4 rounded-lg bg-primary/5 border border-primary/10">
+              <div className="flex items-start gap-2">
+                <span className="material-symbols-outlined text-primary text-sm">security</span>
+                <div className="text-xs text-slate-400">
+                  <p className="mb-1">Tu contraseña debe contener:</p>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    <li>Mínimo 8 caracteres</li>
+                    <li>Al menos una letra mayúscula</li>
+                    <li>Al menos un número</li>
+                    <li>Al menos un símbolo especial</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer className="mt-8 text-center text-xs text-slate-500">
+            <p>ECLIPSE Nightclub • Est. 2024</p>
+          </footer>
         </div>
       </div>
     </div>

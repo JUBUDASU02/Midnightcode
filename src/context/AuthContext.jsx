@@ -1,7 +1,4 @@
-/**
- * src/context/AuthContext.jsx
- */
-
+// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useCallback } from "react";
 import {
   loginRequest,
@@ -12,27 +9,43 @@ import {
 
 const AuthContext = createContext(null);
 
+// ✅ Mapeo de roles numéricos del backend a strings
 export const roleRedirect = (role) => {
-  switch (role) {
-    case "admin":    return "/admin";
-    case "dj":       return "/dj";
-    case "empleado": return "/empleado";
-    default:         return "/dashboard";
+  const roleNum = Number(role);
+  switch (roleNum) {
+    case 1: return "/admin";      // administrador
+    case 2: return "/empleado";   // empleado
+    case 3: return "/dashboard";  // cliente normal
+    case 4: return "/dj";         // DJ
+    default: return "/dashboard";
+  }
+};
+
+// ✅ Convertir rol numérico a nombre
+export const getRoleName = (role) => {
+  const roleNum = Number(role);
+  switch (roleNum) {
+    case 1: return "admin";
+    case 2: return "empleado";
+    case 3: return "cliente";
+    case 4: return "dj";
+    default: return "cliente";
   }
 };
 
 export function AuthProvider({ children }) {
-  const [user,      setUser]      = useState(() => getStoredUser());
+  const [user, setUser] = useState(() => getStoredUser());
   const [authError, setAuthError] = useState(null);
-  const [loading,   setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const login = useCallback(async ({ email, password }) => {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser } = await loginRequest({ email, password });
-      setUser(apiUser);
-      return { success: true, role: apiUser.role };
+      const response = await loginRequest({ email, password });
+      // response = { success: true, user: { role: 1, ... }, token, role: 1 }
+      setUser(response.user);
+      return { success: true, role: response.role };
     } catch (err) {
       const msg = err.message || "Error al iniciar sesión";
       setAuthError(msg);
@@ -46,9 +59,9 @@ export function AuthProvider({ children }) {
     setAuthError(null);
     setLoading(true);
     try {
-      const { user: apiUser } = await registerRequest({ docId, name, email, phone, password });
-      setUser(apiUser);
-      return { success: true, role: apiUser.role };
+      const response = await registerRequest({ docId, name, email, phone, password });
+      setUser(response.user);
+      return { success: true, role: response.role };
     } catch (err) {
       const msg = err.message || "Error al registrar la cuenta";
       setAuthError(msg);
@@ -73,6 +86,7 @@ export function AuthProvider({ children }) {
       if (!prev) return prev;
       const updated = { ...prev, ...updates };
       localStorage.setItem("neon_user", JSON.stringify(updated));
+      localStorage.setItem("user", JSON.stringify(updated));
       return updated;
     });
   }, []);

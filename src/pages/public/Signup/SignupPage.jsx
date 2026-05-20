@@ -4,20 +4,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import FormInput from "../components/auth/FormInput";
-import PasswordInput from "../components/auth/PasswordInput";
-import SubmitButton from "../components/auth/SubmitButton";
-import GlassCard from "../components/auth/GlassCard";
-import SocialProof from "../components/auth/SocialProof";
+import FormInput from "../../../components/Auth/FormInput"
+import PasswordInput from "../../../components/Auth/PasswordInput";
+import SubmitButton from "../../../components/Auth/SubmitButton";
+import GlassCard from "../../../components/Auth/GlassCard";
+import SocialProof from "../../../components/Auth/SocialProof";
 
-// ✅ Esquema con Zod
+// ✅ Esquema con Zod - Incluye documento y teléfono
 const registerSchema = z.object({
+  docId: z.string()
+    .min(1, "El documento es requerido")
+    .min(6, "Mínimo 6 caracteres")
+    .max(15, "Máximo 15 caracteres"),
   name: z.string()
     .min(1, "El nombre es requerido")
-    .min(2, "Mínimo 2 caracteres"),
+    .min(2, "Mínimo 2 caracteres")
+    .regex(/^[a-zA-ZáéíóúñÑÁÉÍÓÚ\s]+$/, "Solo letras y espacios"),
   email: z.string()
     .min(1, "El correo es requerido")
     .email("Correo inválido"),
+  phone: z.string()
+    .min(1, "El teléfono es requerido")
+    .min(10, "Mínimo 10 dígitos")
+    .max(15, "Máximo 15 dígitos")
+    .regex(/^[0-9]+$/, "Solo números"),
   password: z.string()
     .min(1, "La contraseña es requerida")
     .min(6, "Mínimo 6 caracteres"),
@@ -45,12 +55,15 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     clearError();
     const result = await authRegister({
+      docId: data.docId,
       name: data.name,
       email: data.email,
+      phone: data.phone,
       password: data.password,
     });
     
     if (result.success) {
+      // Redirige según el rol (por defecto cliente rol 3)
       navigate("/dashboard", { replace: true });
     }
   };
@@ -99,8 +112,19 @@ export default function RegisterPage() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <FormInput
+                label="Número de documento"
+                name="docId"
+                type="text"
+                placeholder="1234567890"
+                register={register}
+                error={errors.docId?.message}
+                icon="badge"
+              />
+
+              <FormInput
                 label="Nombre completo"
                 name="name"
+                type="text"
                 placeholder="John Doe"
                 register={register}
                 error={errors.name?.message}
@@ -117,6 +141,16 @@ export default function RegisterPage() {
                 icon="mail"
               />
 
+              <FormInput
+                label="Teléfono"
+                name="phone"
+                type="tel"
+                placeholder="3001234567"
+                register={register}
+                error={errors.phone?.message}
+                icon="call"
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <PasswordInput
                   label="Contraseña"
@@ -127,7 +161,7 @@ export default function RegisterPage() {
                 />
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300 ml-1">Confirmar</label>
+                  <label className="text-sm font-medium text-slate-300 ml-1">Confirmar contraseña</label>
                   <input
                     type="password"
                     placeholder="••••••"
@@ -135,7 +169,7 @@ export default function RegisterPage() {
                     className={`w-full bg-primary/5 border ${errors.confirmPassword ? 'border-red-500' : 'border-primary/20'} rounded-xl py-4 px-4 text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all`}
                   />
                   {errors.confirmPassword && (
-                    <p className="text-red-400 text-sm">{errors.confirmPassword.message}</p>
+                    <p className="text-red-400 text-sm mt-1">{errors.confirmPassword.message}</p>
                   )}
                 </div>
               </div>
@@ -144,7 +178,7 @@ export default function RegisterPage() {
                 <input
                   type="checkbox"
                   {...register("terms")}
-                  className="size-4 rounded border-primary/30 bg-primary/10 text-primary mt-0.5"
+                  className="size-4 rounded border-primary/30 bg-primary/10 text-primary mt-0.5 focus:ring-primary/50"
                 />
                 <label className="text-xs text-slate-400">
                   Acepto los{" "}
@@ -157,7 +191,7 @@ export default function RegisterPage() {
                 <p className="text-red-400 text-xs">{errors.terms.message}</p>
               )}
 
-              <SubmitButton loading={loading} loadingText="Creando cuenta..." icon="">
+              <SubmitButton loading={loading} loadingText="Creando cuenta..." icon="how_to_reg">
                 Obtener mi Pase
               </SubmitButton>
             </form>

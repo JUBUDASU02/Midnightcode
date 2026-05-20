@@ -12,7 +12,7 @@ const api = axios.create({
 // Request interceptor: añade el token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("neon_token");
+    const token = localStorage.getItem("token"); // ✅ Cambiado de "neon_token" a "token"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -51,8 +51,9 @@ api.interceptors.response.use(
           break;
         case 401:
           userMessage = "Debes iniciar sesión para continuar.";
-          localStorage.removeItem("neon_token");
+          localStorage.removeItem("token"); // ✅ Cambiado de "neon_token"
           localStorage.removeItem("neon_user");
+          localStorage.removeItem("user");
           window.location.href = "/login";
           break;
         case 403:
